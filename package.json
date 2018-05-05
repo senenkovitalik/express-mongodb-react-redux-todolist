@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "mongoose": "^5.0.17"
+  },
+  "name": "todolist",
+  "description": "Simple To Do List",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/senenkovitalik/express-mongodb-react-redux-todolist.git"
+  },
+  "keywords": [
+    "Express",
+    "MongoDB",
+    "React",
+    "Redux"
+  ],
+  "author": "Senenko Vitaliy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/senenkovitalik/express-mongodb-react-redux-todolist/issues"
+  },
+  "homepage": "https://github.com/senenkovitalik/express-mongodb-react-redux-todolist#readme"
+}
