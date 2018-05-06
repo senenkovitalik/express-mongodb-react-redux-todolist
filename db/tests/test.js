@@ -73,6 +73,17 @@ describe('User creation', () => {
     });
   });
 
+});
+
+describe('Authentication', () => {
+
+  beforeEach(done => {
+    User.deleteMany({}, err => {
+      if (err) return done(err);
+      done();
+    });
+  });
+
   it('should return Error("User not found") if wrong email passed during auth', done => {
     const user = new User({
       username: 'John Doe',
@@ -82,20 +93,43 @@ describe('User creation', () => {
 
     user.save(err => {});
 
-    User.authenticate('doe@gmail.com', 'wrong_password', (err) => {
+    User.authenticate('doe@gmail.com', 'normal_password', (err) => {
       expect(err).to.be.an.instanceof(Error);
       expect(err.message).to.equal("User not found");
+      expect(err.status).to.equal(401);
       done();
     });
   });
 
-  it('should not pass any arguments if auth fails', done => {
-    expect(null).to.equal({});
-    done();
+  it('should not pass any arguments to callback function if auth fails', done => {
+    const user = new User({
+      username: 'John Doe',
+      email: 'john.doe@gmail.com',
+      password: 'normal_password'
+    });
+
+    user.save(() => {
+      User.authenticate('john.doe@gmail.com', 'wrong_password', function (err, user) {
+        expect(err).to.be.undefined;
+        expect(user).to.be.undefined;
+        done();
+      });
+    });
   });
 
-  it('should pass null as first arg and User object as second arg to callback function if auth success', done => {
-    expect(null).to.equal({});
-    done();
+  it('should pass null and User object to callback function if auth success', done => {
+    const user = new User({
+      username: 'John Doe',
+      email: 'john.doe@gmail.com',
+      password: 'normal_password'
+    });
+
+    user.save((err, s_user) => {
+      User.authenticate('john.doe@gmail.com', 'normal_password', (err, r_user) => {
+        expect(err).to.be.null;
+        expect(r_user._doc).to.deep.equal(s_user._doc);
+        done();
+      });
+    });
   });
 });
