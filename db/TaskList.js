@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { TaskSchema } = require('../db/Task');
 
 const TaskListSchema = mongoose.Schema({
   title: {
@@ -9,22 +10,7 @@ const TaskListSchema = mongoose.Schema({
     maxlength: 30,
     unique: true
   },
-  tasks: [{
-    title: {
-      type: String,
-      required: true,
-      trim: true,
-      unique: true
-    },
-    completed: {
-      type: Boolean,
-      default: false
-    },
-    created_at: {
-      type: Date,
-      default: Date.now
-    }
-  }],
+  tasks: [TaskSchema],
   visibility_filter: {
     type: String,
     enum: ['SHOW_ACTIVE', 'SHOW_COMPLETED', 'SHOW_ALL'],
@@ -38,6 +24,12 @@ const TaskListSchema = mongoose.Schema({
     type: Date,
     default: Date.now
   },
+});
+
+TaskListSchema.pre('update', function(next) {
+  // `this` point to Query object
+  this.update({}, { $set: { modified_at: new Date }});
+  next();
 });
 
 const TaskList = mongoose.model('TaskList', TaskListSchema);
