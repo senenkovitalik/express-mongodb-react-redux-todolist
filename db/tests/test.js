@@ -228,6 +228,51 @@ describe("DB", () => {
 
     });
 
+    describe('Updating', () => {
+
+      beforeEach(done => clearTaskListCollection(done));
+
+      it('Validate Task before save it to tasks', done => {
+        const list = new TaskList({ title: 'List #1' });
+
+        list.save((err, res) => {
+
+          const update = { $push: { tasks: { title: "" } } };
+
+          const opts = { runValidators: true };
+
+          res.update(update, opts, (err, task) => {
+            expect(err.errors['tasks'].name).to.be.equal('ValidationError');
+            expect(err.errors['tasks'].message).to.be.equal('Validation failed: title: Path `title` is required.');
+            done()
+          });
+        });
+      });
+
+      it("`modified_at` property must be changed after update", done => {
+        const list = new TaskList({ title: 'List #1' });
+
+        list.save()
+          .then(list => {
+            const old_date = list.modified_at.valueOf();
+
+            list.update({ title: "New Task #1" })
+              .exec()
+              .then(() => {
+                TaskList.findById(list._id, (err, list) => {
+                  const new_date = list.modified_at.valueOf();
+
+                  expect(old_date).to.not.equal(new_date);
+                  done();
+                });
+              })
+              .catch(err => console.log(err));
+          })
+          .catch(err => console.log(err));
+      });
+
+    });
+
   });
 
   describe('Task', () => {
