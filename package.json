@@ -12,7 +12,8 @@
     "mocha": "^5.1.1"
   },
   "scripts": {
-    "test": "mocha ./db/tests/test.js"
+    "test": "mocha ./db/tests/test.js",
+    "test:auto": "nodemon --exec \"npm test\""
   },
   "repository": {
     "type": "git",
