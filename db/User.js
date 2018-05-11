@@ -34,10 +34,11 @@ const UserSchema = mongoose.Schema({
   task_lists: []
 });
 
-UserSchema.pre('save', function (next) {
+UserSchema.pre('save', function(next) {
   const user = this;
   bcrypt.hash(user.password, 10, (err, hash) => {
     if (err) {
+      console.log(err);
       return next(err);
     }
     user.password = hash;
