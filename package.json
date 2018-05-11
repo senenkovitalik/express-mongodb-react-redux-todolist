@@ -1,6 +1,11 @@
 {
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.2",
+    "connect-mongo": "^2.0.1",
+    "email-validator": "^2.0.3",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
     "mongoose": "^5.0.17"
   },
   "name": "todolist",
@@ -13,7 +18,8 @@
   },
   "scripts": {
     "test": "mocha ./db/tests/test.js",
-    "test:auto": "nodemon --exec \"npm test\""
+    "test:auto": "nodemon --exec \"npm test\"",
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
