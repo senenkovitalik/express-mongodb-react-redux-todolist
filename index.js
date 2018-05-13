@@ -27,6 +27,11 @@ app.use(session({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// stub route
+app.get('/', (req, res) => {
+  res.status(200).send("OK");
+});
+
 const routes = require('./routes/router');
 app.use("/api", routes);
 
