@@ -53,11 +53,12 @@ router.post('/login', (req, res) => {
 
   User.authenticate(email, password, (err, user) => {
     if (err) {
-      return res.status(401).send("Unauthorized");
+      return res.status(401).send("Unauthorized (Wrong username or password)");
     }
 
     if (user) {
       req.session.user_id = user._id;
+      console.log(req.session);
       return res.status(200).send("OK");
     } else {
       return res.status(401).send("Unauthorized (Wrong username or password)");
