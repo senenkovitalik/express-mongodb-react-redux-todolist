@@ -76,4 +76,26 @@ router.get('/logout', (req, res) => {
   });
 });
 
+router.route('/users/self')
+  .put((req, res, next) => {
+    next(new Error('not implemented yet'));
+  })
+  .delete((req, res) => {
+    const { user_id } = req.session;
+
+    if (user_id) {
+      User.remove({ _id: user_id }, err => {
+        if (err) {
+          console.log(err);
+          return res.status(500).send("Internal Server Error");
+        }
+        res.location('/');
+        res.status(200);
+        res.end();
+      });
+    } else {
+      return res.status(400).send("Bad Request");
+    }
+  });
+
 module.exports = router;
