@@ -77,8 +77,60 @@ router.get('/logout', (req, res) => {
 });
 
 router.route('/users/self')
-  .put((req, res, next) => {
-    next(new Error('not implemented yet'));
+  .put((req, res) => {
+
+    const { username, email, password, conf_password } = req.body;
+    const updateObj = {};
+
+    if (username) {
+      updateObj.username = username
+    }
+
+    if (email) {
+      updateObj.email = email;
+    }
+
+    if (password && conf_password) {
+      if (validatePasswords(password, conf_password)) {
+        updateObj.password = password;
+      } else {
+        return res.status(400).send("Bad Request");
+      }
+    }
+
+    // no data provided
+    if (Object.keys(updateObj).length === 0) {
+      return res.status(400).send("Bad Request");
+    }
+
+    const opts = { runValidators: true };
+
+    User.findByIdAndUpdate(req.session.user_id, updateObj, opts, err => {
+      if (err) {
+        console.log(err);
+        switch (err.name) {
+          case "ValidationError":
+            return res.status(400).send("Bad Request");
+          default:
+            return res.status(500).send("Internal Server Error");
+        }
+      }
+
+      /*
+       * User must relogin if email or pass updated
+       */
+      if (email || password) {
+        req.session.destroy(err => {
+          if (err) {
+            console.log(err);
+            return res.status(500).send("Internal Server Error");
+          }
+          res.redirect(302, '/login');
+        });
+      } else {
+        return res.status(200).send("OK");
+      }
+    });
   })
   .delete((req, res) => {
     const { user_id } = req.session;

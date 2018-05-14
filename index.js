@@ -32,6 +32,11 @@ app.get('/', (req, res) => {
   res.status(200).send("OK");
 });
 
+// stub route
+app.get('/login', (req, res) => {
+  res.status(200).send("OK");
+});
+
 const routes = require('./routes/router');
 app.use("/api", routes);
 
