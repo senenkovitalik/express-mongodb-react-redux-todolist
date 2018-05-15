@@ -14,6 +14,12 @@ function validatePasswords(pass, conf_pass) {
   return false;
 }
 
+function checkAuth(req, res, next) {
+  return req.session.user_id
+    ? next()
+    : res.status(401).send("Unauthorized");
+}
+
 router.post('/signup', (req, res) => {
   const { username, email, password, conf_password } = req.body;
 
@@ -66,7 +72,6 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/logout', (req, res) => {
-  console.log(req.session.cookie);
   req.session.destroy(err => {
     if (err) {
       console.log(err);
@@ -132,11 +137,13 @@ router.route('/users/self')
       }
     });
   })
-  .delete((req, res) => {
-    const { user_id } = req.session;
-
-    if (user_id) {
-      User.remove({ _id: user_id }, err => {
+  .delete(checkAuth, (req, res) => {
+    User.remove({ _id: req.session.user_id }, err => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("Internal Server Error");
+      }
+      req.session.destroy(err => {
         if (err) {
           console.log(err);
           return res.status(500).send("Internal Server Error");
@@ -145,9 +152,8 @@ router.route('/users/self')
         res.status(200);
         res.end();
       });
-    } else {
-      return res.status(400).send("Bad Request");
-    }
+    });
   });
+
 
 module.exports = router;
