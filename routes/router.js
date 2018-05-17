@@ -108,9 +108,13 @@ router.route('/users/self')
       return res.status(400).send("Bad Request");
     }
 
-    const opts = { runValidators: true };
+    const id = req.session.user_id;
+    const opts = {
+      upsert: false,
+      runValidators: true
+    };
 
-    User.findByIdAndUpdate(req.session.user_id, updateObj, opts, err => {
+    User.update({ _id: id }, updateObj, opts, err => {
       if (err) {
         console.log(err);
         switch (err.name) {

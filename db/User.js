@@ -27,9 +27,7 @@ const UserSchema = mongoose.Schema({
   password: {
     type: String,
     required: true,
-    trim: true,
-    minlength: 8,
-    maxlength: 25
+    trim: true
   },
   created_at: {
     type: Date
@@ -39,6 +37,24 @@ const UserSchema = mongoose.Schema({
     default: Date.now
   },
   task_lists: []
+});
+
+// hash password before update
+UserSchema.pre('update', function(next) {
+  const { password } = this.getUpdate();
+
+  if (password) {
+    bcrypt.hash(password, 10, (err, hash) => {
+      if (err) {
+        console.log(err);
+        return next(err);
+      }
+      this.update({}, { password: hash });
+      next();
+    });
+  } else {
+    next();
+  }
 });
 
 UserSchema.pre('save', function(next) {
