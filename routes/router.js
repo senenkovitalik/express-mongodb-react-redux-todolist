@@ -82,18 +82,13 @@ router.get('/logout', (req, res) => {
 });
 
 router.route('/users/self')
-  .put((req, res) => {
+  .patch((req, res) => {
 
     const { username, email, password, conf_password } = req.body;
     const updateObj = {};
 
-    if (username) {
-      updateObj.username = username
-    }
-
-    if (email) {
-      updateObj.email = email;
-    }
+    if (username) updateObj.username = username;
+    if (email) updateObj.email = email;
 
     if (password && conf_password) {
       if (validatePasswords(password, conf_password)) {
@@ -116,7 +111,7 @@ router.route('/users/self')
 
     User.update({ _id: id }, updateObj, opts, err => {
       if (err) {
-        console.log(err);
+        console.log(err.message);
         switch (err.name) {
           case "ValidationError":
             return res.status(400).send("Bad Request");
