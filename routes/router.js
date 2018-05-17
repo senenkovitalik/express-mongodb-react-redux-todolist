@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const listRouter = express.Router({ mergeParams: true });
+
 const User = require('../db/User');
+const { TaskList } = require('../db/TaskList');
 
 function validatePasswords(pass, conf_pass) {
   if (pass && conf_pass) {
@@ -18,6 +21,18 @@ function checkAuth(req, res, next) {
   return req.session.user_id
     ? next()
     : res.status(401).send("Unauthorized");
+}
+
+function handleMongooseError(err, res) {
+  if (err) {
+    console.log(err);
+    switch (err.name) {
+      case 'CastError':
+        return res.status(400).end();
+      default:
+        return res.status(500).end();
+    }
+  }
 }
 
 router.post('/signup', (req, res) => {
@@ -154,5 +169,42 @@ router.route('/users/self')
     });
   });
 
+
+// private routes --->>>
+listRouter.post('/:title', checkAuth, (req, res) => {
+  const title = req.params.title;
+
+  console.log(title);
+
+  TaskList.create({ title: title }, (err, list) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    res.location(`/api/lists/${list._id}`);
+    return res.status(201).send("Created");
+  });
+});
+
+listRouter.delete('/', (req, res) => {
+  res.status(405).end();
+});
+
+listRouter.delete('/:id', checkAuth, (req, res) => {
+  const { id } = req.params;
+
+  TaskList.deleteOne({ _id: id }, (err) => {
+    if (err) {
+      handleMongooseError(err, res);
+    } else {
+      res.status(204).end();
+    }
+  });
+});
+
+// <<<--- private routes
+
+router.use('/lists', listRouter);
 
 module.exports = router;
