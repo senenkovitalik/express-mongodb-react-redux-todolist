@@ -24,14 +24,12 @@ function checkAuth(req, res, next) {
 }
 
 function handleMongooseError(err, res) {
-  if (err) {
-    console.log(err);
-    switch (err.name) {
-      case 'CastError':
-        return res.status(400).end();
-      default:
-        return res.status(500).end();
-    }
+  console.log(err);
+  switch (err.name) {
+    case 'CastError':
+      return res.status(400).end();
+    default:
+      return res.status(500).end();
   }
 }
 
@@ -171,20 +169,35 @@ router.route('/users/self')
 
 
 // private routes --->>>
-listRouter.post('/:title', checkAuth, (req, res) => {
-  const title = req.params.title;
 
-  console.log(title);
-
-  TaskList.create({ title: title }, (err, list) => {
+// get all user's lists
+listRouter.get('/', checkAuth, (req, res) => {
+  User.findOne({ _id: req.session.user_id }, (err, user) => {
     if (err) {
-      console.log(err);
-      return res.status(500).send('Internal Server Error');
+      handleMongooseError(err, res);
+    } else {
+      console.log(user);
+      res.status(200).json(lists);
     }
+  })
+});
 
-    res.location(`/api/lists/${list._id}`);
-    return res.status(201).send("Created");
-  });
+// create task list
+listRouter.post('/:title', checkAuth, (req, res) => {
+  const { title } = req.params;
+
+  User.findById(req.session.user_id, (err, user) => {
+    if (err) handleMongooseError(err, res);
+    const list = user.task_lists.create({ title });
+    user.task_lists.push(list);
+    user.save()
+      .then(() => {
+        res.location(`/api/lists/${list._id}`);
+        res.status(201);
+        res.end();
+      })
+      .catch(err => handleMongooseError(err, res));
+  })
 });
 
 listRouter.delete('/', (req, res) => {

@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const email_validator = require('email-validator');
 const bcrypt = require('bcryptjs');
 
+const { TaskListSchema } = require('./TaskList');
+
 const UserSchema = mongoose.Schema({
   username: {
     type: String,
@@ -36,7 +38,7 @@ const UserSchema = mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  task_lists: []
+  task_lists: [TaskListSchema]
 });
 
 // hash password before update
