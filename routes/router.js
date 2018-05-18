@@ -172,14 +172,19 @@ router.route('/users/self')
 
 // get all user's lists
 listRouter.get('/', checkAuth, (req, res) => {
-  User.findOne({ _id: req.session.user_id }, (err, user) => {
-    if (err) {
-      handleMongooseError(err, res);
-    } else {
-      console.log(user);
-      res.status(200).json(lists);
-    }
+  User.findById(req.session.user_id, (err, user) => {
+    if (err) handleMongooseError(err, res);
+    res.status(200).json(user.task_lists);
   })
+});
+
+listRouter.get('/:id', checkAuth, (req, res) => {
+  User.findById(req.session.user_id, (err, user) => {
+    if (err) handleMongooseError(err, res);
+    const list = user.task_lists.id(req.params.id);
+    res.status(200);
+    res.json(list);
+  });
 });
 
 // create task list
