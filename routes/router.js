@@ -152,7 +152,7 @@ router.route('/users/self')
       }
     });
   })
-  .delete(checkAuth, (req, res) => {
+  .delete((req, res) => {
     User.remove({ _id: req.session.user_id }, err => {
       if (err) {
         console.log(err);
@@ -171,14 +171,14 @@ router.route('/users/self')
   });
 
 // get all user's lists
-listRouter.get('/', checkAuth, (req, res) => {
+listRouter.get('/', (req, res) => {
   User.findById(req.session.user_id, (err, user) => {
     if (err) handleMongooseError(err, res);
     res.status(200).json(user.task_lists);
   })
 });
 
-listRouter.get('/:id', checkAuth, (req, res) => {
+listRouter.get('/:id', (req, res) => {
   User.findById(req.session.user_id, (err, user) => {
     if (err) handleMongooseError(err, res);
     const list = user.task_lists.id(req.params.id);
@@ -188,7 +188,7 @@ listRouter.get('/:id', checkAuth, (req, res) => {
 });
 
 // create task list
-listRouter.post('/:title', checkAuth, (req, res) => {
+listRouter.post('/:title', (req, res) => {
   const { title } = req.params;
 
   User.findById(req.session.user_id, (err, user) => {
@@ -205,11 +205,15 @@ listRouter.post('/:title', checkAuth, (req, res) => {
   })
 });
 
-listRouter.delete('/', checkAuth, (req, res) => {
+listRouter.patch('/:id/:title', (req, res) => {
+
+});
+
+listRouter.delete('/', (req, res) => {
   res.status(405).end();
 });
 
-listRouter.delete('/:id', checkAuth, (req, res) => {
+listRouter.delete('/:id', (req, res) => {
   const { id } = req.params;
 
   User.findById(req.session.user_id, (err, user) => {
@@ -231,6 +235,6 @@ listRouter.delete('/:id', checkAuth, (req, res) => {
 
 // <<<--- private routes
 
-router.use('/lists', listRouter);
+router.use('/lists', checkAuth, listRouter);
 
 module.exports = router;
