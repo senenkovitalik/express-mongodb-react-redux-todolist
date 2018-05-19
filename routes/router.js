@@ -27,6 +27,7 @@ function handleMongooseError(err, res) {
   console.log(err);
   switch (err.name) {
     case 'CastError':
+    case 'TypeError':
       return res.status(400).end();
     default:
       return res.status(500).end();
@@ -83,6 +84,8 @@ router.post('/login', (req, res) => {
     }
   });
 });
+
+// private routes --->>>
 
 router.get('/logout', (req, res) => {
   req.session.destroy(err => {
@@ -167,9 +170,6 @@ router.route('/users/self')
     });
   });
 
-
-// private routes --->>>
-
 // get all user's lists
 listRouter.get('/', checkAuth, (req, res) => {
   User.findById(req.session.user_id, (err, user) => {
@@ -205,19 +205,27 @@ listRouter.post('/:title', checkAuth, (req, res) => {
   })
 });
 
-listRouter.delete('/', (req, res) => {
+listRouter.delete('/', checkAuth, (req, res) => {
   res.status(405).end();
 });
 
 listRouter.delete('/:id', checkAuth, (req, res) => {
   const { id } = req.params;
 
-  TaskList.deleteOne({ _id: id }, (err) => {
-    if (err) {
-      handleMongooseError(err, res);
-    } else {
-      res.status(204).end();
+  User.findById(req.session.user_id, (err, user) => {
+    if (err) handleMongooseError(err, res);
+
+    try {
+      user.task_lists.id(id).remove();
+    } catch (err) {
+      handleMongooseError(err, res)
     }
+
+    user.save()
+      .then(() => {
+        res.status(204).end();
+      })
+      .catch(err => handleMongooseError(err, res));
   });
 });
 
