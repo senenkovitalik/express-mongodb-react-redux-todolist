@@ -211,13 +211,40 @@ listRouter.patch('/:id', (req, res) => {
   res.status(405).end();
 });
 
-listRouter.patch('/:id/:title', (req, res) => {
+listRouter.patch('/:id/title', (req, res) => {
+  res.status(405).end();
+});
+
+listRouter.patch('/:id/title/:title', (req, res) => {
   const { id, title } = req.params;
 
   User.findById(req.session.user_id)
     .then(user => {
       const list = user.task_lists.id(id);
       list.title = title;
+
+      return user.save();
+    })
+    .then(() => {
+      res.status(204).end();
+    })
+    .catch(err => handleMongooseError(err, res));
+});
+
+// update visibility filter
+listRouter.patch('/:id/visibility_filter', (req, res) => {
+  res.status(405).end();
+});
+
+listRouter.patch('/:id/visibility_filter/:filter', (req, res) => {
+  const { id, filter } = req.params;
+
+  User.findById(req.session.user_id)
+    .then(user => {
+      const list = user.task_lists.id(id);
+      list.visibility_filter = filter;
+
+      console.log('list:', list);
 
       return user.save();
     })
