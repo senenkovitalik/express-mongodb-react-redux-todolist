@@ -28,6 +28,7 @@ function handleMongooseError(err, res) {
   switch (err.name) {
     case 'CastError':
     case 'TypeError':
+    case 'ValidationError':
       return res.status(400).end();
     default:
       return res.status(500).end();
@@ -205,8 +206,25 @@ listRouter.post('/:title', (req, res) => {
   })
 });
 
-listRouter.patch('/:id/:title', (req, res) => {
+// update list title
+listRouter.patch('/:id', (req, res) => {
+  res.status(405).end();
+});
 
+listRouter.patch('/:id/:title', (req, res) => {
+  const { id, title } = req.params;
+
+  User.findById(req.session.user_id)
+    .then(user => {
+      const list = user.task_lists.id(id);
+      list.title = title;
+
+      return user.save();
+    })
+    .then(() => {
+      res.status(204).end();
+    })
+    .catch(err => handleMongooseError(err, res));
 });
 
 listRouter.delete('/', (req, res) => {
