@@ -1,3 +1,5 @@
+const User = require('./db/User');
+
 function validatePasswords(pass, conf_pass) {
   if (pass && conf_pass) {
     const password = pass.trim();
