@@ -16,6 +16,15 @@ function checkAuth(req, res, next) {
     : res.status(401).send("Unauthorized");
 }
 
+function findUser(req, res, next) {
+  User.findById(req.session.user_id)
+    .then(user => {
+      req.user = user;
+      next();
+    })
+    .catch(err => handleMongooseError(err, res));
+}
+
 function handleMongooseError(err, res) {
   console.log(err);
   switch (err.name) {
@@ -31,5 +40,6 @@ function handleMongooseError(err, res) {
 module.exports = {
   validatePasswords,
   checkAuth,
+  findUser,
   handleMongooseError
 };
