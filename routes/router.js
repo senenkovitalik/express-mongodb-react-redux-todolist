@@ -5,7 +5,7 @@ const taskRouter = require('./task_router');
 
 const User = require('../db/User');
 
-const { validatePasswords, checkAuth } = require('../utils');
+const { validatePasswords, checkAuth, handleMongooseError } = require('../utils');
 
 router.post('/signup', (req, res) => {
   const { username, email, password, conf_password } = req.body;
@@ -69,7 +69,7 @@ router.get('/logout', (req, res) => {
 });
 
 router.route('/users/self')
-  .patch((req, res) => {
+  .patch(checkAuth, (req, res) => {
 
     const { username, email, password, conf_password } = req.body;
     const updateObj = {};
@@ -123,22 +123,18 @@ router.route('/users/self')
       }
     });
   })
-  .delete((req, res) => {
-    User.remove({ _id: req.session.user_id }, err => {
-      if (err) {
-        console.log(err);
-        return res.status(500).send("Internal Server Error");
-      }
-      req.session.destroy(err => {
-        if (err) {
-          console.log(err);
-          return res.status(500).send("Internal Server Error");
-        }
-        res.location('/');
-        res.status(200);
-        res.end();
-      });
-    });
+  .delete(checkAuth, (req, res) => {
+    User.remove({ _id: req.session.user_id })
+      .then(() => {
+        req.session.destroy(err => {
+          if (err) handleMongooseError(err, res);
+
+          res.location('/');
+          res.status(200);
+          res.end();
+        });
+      })
+      .catch(err => handleMongooseError(err, res));
   });
 
 router.use('/lists', checkAuth, listRouter);
