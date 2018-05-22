@@ -39,21 +39,47 @@ taskRouter.get('/:taskId', findUser, (req, res) => {
 
 // create task
 taskRouter.post('/:title', findUser, (req, res) => {
-  const { id, title } = req.params;
+  const { listID, title } = req.params;
   const { user } = req;
 
-  const list = user.task_lists.id(id);
+  const list = user.task_lists.id(listID);
   const task = list.tasks.create({ title });
-  const taskId = task._id;
+  const taskID = task._id;
 
   list.tasks.push(task);
 
   user.save()
-    .then((user) => {
-      res.location(`/api/lists/${id}/tasks/${taskId}`);
+    .then(() => {
+      res.location(`/api/lists/${listID}/tasks/${taskID}`);
       res.status(201).end();
     })
     .catch(err => handleMongooseError(err, res));
+});
+
+// delete task
+taskRouter.delete('/:taskID', findUser, (req, res) => {
+  const { user } = req;
+  const { listID, taskID } = req.params;
+
+  const list = user.task_lists.id(listID);
+
+  if (list === null) {
+    res.status(404).end();
+  }
+
+  const task = list.tasks.id(taskID);
+
+  if (task) {
+    task.remove();
+    user.save()
+      .then(() => {
+        res.status(204).end();
+      })
+      .catch(err => handleMongooseError(err, res));
+  } else {
+    res.status(404).end();
+  }
+
 });
 
 module.exports = taskRouter;
