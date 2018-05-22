@@ -57,27 +57,21 @@ taskRouter.post('/:title', findUser, (req, res) => {
 });
 
 // change task status
-taskRouter.patch('/:taskID/triger', findUser, (req, res) => {
+taskRouter.patch('/:taskID/trigger', findUser, (req, res) => {
   const { user, params: { listID, taskID } } = req;
 
   const list = user.task_lists.id(listID);
-
-  if (list === null) {
-    res.status(404).send();
-  }
+  if (list === null) return res.status(404).send();
 
   const task = list.tasks.id(taskID);
+  if (task === null) return res.status(404).send();
 
-  if (task) {
-    task.completed = !task.completed;
-    user.save()
-      .then(() => {
-        res.status(204).end();
-      })
-      .catch(err => handleMongooseError(err, res));
-  } else {
-    res.status(404).end();
-  }
+  task.completed = !task.completed;
+  user.save()
+    .then(() => {
+      res.status(204).end();
+    })
+    .catch(err => handleMongooseError(err, res));
 });
 
 taskRouter.patch('/:taskID/:title', findUser, (req, res) => {
