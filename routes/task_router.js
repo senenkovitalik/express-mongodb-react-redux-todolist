@@ -56,6 +56,30 @@ taskRouter.post('/:title', findUser, (req, res) => {
     .catch(err => handleMongooseError(err, res));
 });
 
+// change task status
+taskRouter.patch('/:taskID/triger', findUser, (req, res) => {
+  const { user, params: { listID, taskID } } = req;
+
+  const list = user.task_lists.id(listID);
+
+  if (list === null) {
+    res.status(404).send();
+  }
+
+  const task = list.tasks.id(taskID);
+
+  if (task) {
+    task.completed = !task.completed;
+    user.save()
+      .then(() => {
+        res.status(204).end();
+      })
+      .catch(err => handleMongooseError(err, res));
+  } else {
+    res.status(404).end();
+  }
+});
+
 // delete task
 taskRouter.delete('/:taskID', findUser, (req, res) => {
   const { user } = req;
