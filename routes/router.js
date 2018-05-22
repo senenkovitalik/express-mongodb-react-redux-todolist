@@ -138,6 +138,6 @@ router.route('/users/self')
   });
 
 router.use('/lists', checkAuth, listRouter);
-router.use('/lists/:id/tasks', checkAuth, taskRouter);
+router.use('/lists/:listID/tasks', checkAuth, taskRouter);
 
 module.exports = router;
