@@ -6,9 +6,9 @@ const { findUser, handleMongooseError } = require('../utils');
 // get list of tasks
 taskRouter.get('/', findUser, (req, res) => {
   const { user } = req;
-  const { id } = req.params;
+  const { listID } = req.params;
 
-  const task_list = user.task_lists.id(id);
+  const task_list = user.task_lists.id(listID);
 
   if (task_list !== null) {
     const { tasks } = task_list;
@@ -24,11 +24,11 @@ taskRouter.get('/', findUser, (req, res) => {
 });
 
 // get task by ID
-taskRouter.get('/:taskId', findUser, (req, res) => {
+taskRouter.get('/:taskID', findUser, (req, res) => {
   const { user } = req;
-  const { id: listId, taskId } = req.params;
+  const { listID, taskID } = req.params;
 
-  const task = user.task_lists.id(listId).tasks.id(taskId);
+  const task = user.task_lists.id(listID).tasks.id(taskID);
 
   if (task) {
     res.status(200).json(task);
