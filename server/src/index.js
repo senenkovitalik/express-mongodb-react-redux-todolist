@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -15,6 +16,15 @@ db.once('open', function () {
 
 const app = express();
 
+app.use(morgan('dev'));
+
+app.set('layouts', process.cwd() + '/server/src/layouts');
+app.set('views', app.get('layouts'));
+app.set('view engine', 'pug');
+
+app.use(express.static(process.cwd()+'/server/src/'));
+app.use(express.static(process.cwd()+'/'));
+
 app.use(session({
   secret: 'vEry_$tr0ng-P@$$',
   resave: true,
@@ -29,7 +39,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // stub route
 app.get('/', (req, res) => {
-  res.status(200).send("OK");
+  res.render('index');
 });
 
 // stub route
