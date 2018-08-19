@@ -12,7 +12,8 @@
     "morgan": "^1.9.0",
     "pug": "^2.0.3",
     "react": "^16.4.1",
-    "react-dom": "^16.4.1"
+    "react-dom": "^16.4.1",
+    "reactstrap": "^6.4.0"
   },
   "name": "todolist",
   "description": "Simple To Do List",

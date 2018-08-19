@@ -1,0 +1,11 @@
+.task:first-child {
+    margin-top: 5px;
+}
+
+.task {
+    margin-bottom: 5px;
+}
+
+.section-name {
+    margin-top: 10px;
+}
