@@ -9,9 +9,9 @@ class ListsDropdown extends React.Component {
     render() {
         return (
             <FormGroup row>
-                <Col xs="2">List:</Col>
+                <label htmlFor="list" className="col-2 col-form-label">List</label>
                 <Col xs="10">
-                    <Input type="select" name="list">
+                    <Input type="select" name="list" className="form-control" id="list">
                         <option>List #1</option>
                         <option>List #2</option>
                         <option>List #3</option>

@@ -9,9 +9,9 @@ class GroupActions extends React.Component {
     render() {
         return (
             <FormGroup row>
-                <Col xs="3">Group actions:</Col>
+                <label htmlFor="actions" className="col-3 col-form-label">Group actions</label>
                 <Col xs="9">
-                    <Input type="select" name="filter">
+                    <Input type="select" className="form-control" name="actions" id="actions">
                         <option>Select/Deselect All</option>
                         <option>Complete/Activate selected</option>
                     </Input>
