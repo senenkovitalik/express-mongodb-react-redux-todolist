@@ -17,7 +17,7 @@ class Tasks extends React.Component {
 
     render() {
         return (
-            <Row className="justify-content-center">
+            <Row noGutters className="justify-content-center">
                 <Col xs="10">
                     <div className="mt-3">
                         <ListsDropdown />

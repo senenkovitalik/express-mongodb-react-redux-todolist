@@ -1,4 +1,5 @@
 import React from 'react';
+import { Container, Row, Col } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from "./Header";
 import Footer from "./Footer";
@@ -11,11 +12,11 @@ class App extends React.Component {
 
     render() {
         return (
-            <div>
-                <Header />
-                <Tasks />
-                <Footer />
-            </div>
+          <div>
+            <Header />
+            <Tasks />
+            <Footer />
+          </div>
         )
     }
 }
