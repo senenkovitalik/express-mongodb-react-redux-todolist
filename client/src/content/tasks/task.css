@@ -1,0 +1,15 @@
+.card-body {
+    padding: 0.5rem;
+}
+
+.card {
+    margin-bottom: 5px;
+}
+
+.card:hover {
+    background-color: #eee;
+}
+
+.task-description {
+    line-height: 1;
+}
