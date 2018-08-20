@@ -8,6 +8,7 @@ import {
     NavLink,
     Navbar
 } from "reactstrap";
+import { Link } from 'react-router-dom';
 
 class Header extends React.Component {
     constructor(props) {
@@ -28,16 +29,23 @@ class Header extends React.Component {
     render() {
         return (
             <Navbar color="dark" dark expand="md">
-                <NavbarBrand href='/' className="mr-auto">To Do List</NavbarBrand>
+                <NavbarBrand href='/' className="mr-auto">To Do</NavbarBrand>
                 <NavbarToggler onClick={this.toggleNavbar}/>
                 <Collapse isOpen={!this.state.collapsed} navbar>
                     <Nav className="ml-auto" navbar>
                         <NavItem>
-                            <NavLink href="/">Link 1</NavLink>
+                            <NavLink tag={Link} to="/">Home</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="/">Link 2</NavLink>
+                            <NavLink tag={Link} to="/lists">Lists</NavLink>
                         </NavItem>
+                      <NavItem>
+                        <NavLink tag={Link} to="/about_us">About us</NavLink>
+                      </NavItem>
+                      <div className="form-inline">
+                        <Link to="/login" className="btn btn-outline-success" role="button">Login</Link>
+                        <Link to="/signup" className="btn btn-outline-primary" role="button">Sign Up</Link>
+                      </div>
                     </Nav>
                 </Collapse>
             </Navbar>
