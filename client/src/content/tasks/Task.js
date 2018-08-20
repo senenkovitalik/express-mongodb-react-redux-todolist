@@ -2,7 +2,7 @@ import React from 'react';
 import {
     Card,
     CardBody,
-  Input
+    Input
 } from 'reactstrap';
 import './task.css';
 
