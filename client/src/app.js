@@ -9,6 +9,7 @@ import Home from './content/home/Home';
 import Login from './content/login/Login';
 import Signup from './content/signup/Signup';
 import Tasks from "./content/tasks/Tasks";
+import Task from "./content/task/Task";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends React.Component {
@@ -26,6 +27,7 @@ class App extends React.Component {
               <Route path="/login" component={Login}/>
               <Route path="/signup" component={Signup} />
               <Route path="/lists" component={Tasks} />
+              <Route path="/task" component={Task} />
 
               <Footer />
             </div>
