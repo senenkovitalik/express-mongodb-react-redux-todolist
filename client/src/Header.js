@@ -5,10 +5,10 @@ import {
     Collapse,
     Nav,
     NavItem,
-    NavLink,
+  NavLink,
     Navbar
 } from "reactstrap";
-import { Link } from 'react-router-dom';
+import { NavLink as nav, Link } from 'react-router-dom';
 
 class Header extends React.Component {
     constructor(props) {
@@ -34,13 +34,13 @@ class Header extends React.Component {
                 <Collapse isOpen={!this.state.collapsed} navbar>
                     <Nav className="ml-auto" navbar>
                         <NavItem>
-                            <NavLink tag={Link} to="/">Home</NavLink>
+                            <NavLink tag={nav} to="/">Home</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink tag={Link} to="/lists">Lists</NavLink>
+                            <NavLink tag={nav} to="/lists">Lists</NavLink>
                         </NavItem>
                       <NavItem>
-                        <NavLink tag={Link} to="/about_us">About us</NavLink>
+                        <NavLink tag={nav} to="/about_us">About us</NavLink>
                       </NavItem>
                       <div className="form-inline">
                         <Link to="/login" className="btn btn-outline-success" role="button">Login</Link>
