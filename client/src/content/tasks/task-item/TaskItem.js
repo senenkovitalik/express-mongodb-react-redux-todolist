@@ -4,7 +4,7 @@ import {
     CardBody,
     Input
 } from 'reactstrap';
-import './task.css';
+import './task-item.css';
 
 class Task extends React.Component {
     constructor(props) {
