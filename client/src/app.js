@@ -6,6 +6,8 @@ import {
 import Header from "./Header";
 import Footer from "./Footer";
 import Home from './content/home/Home';
+import Login from './content/login/Login';
+import Signup from './content/signup/Signup';
 import Tasks from "./content/tasks/Tasks";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -21,6 +23,8 @@ class App extends React.Component {
               <Header />
 
               <Route exact path="/" component={Home} />
+              <Route path="/login" component={Login}/>
+              <Route path="/signup" component={Signup} />
               <Route path="/lists" component={Tasks} />
 
               <Footer />
