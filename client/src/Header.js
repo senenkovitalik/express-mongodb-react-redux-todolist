@@ -40,6 +40,9 @@ class Header extends React.Component {
                             <NavLink tag={nav} to="/lists">Lists</NavLink>
                         </NavItem>
                       <NavItem>
+                        <NavLink tag={nav} to="/task">Task</NavLink>
+                      </NavItem>
+                      <NavItem>
                         <NavLink tag={nav} to="/about_us">About us</NavLink>
                       </NavItem>
                       <div className="form-inline">

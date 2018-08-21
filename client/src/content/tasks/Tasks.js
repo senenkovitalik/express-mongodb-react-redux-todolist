@@ -3,7 +3,7 @@ import {
     Row,
     Col
 } from 'reactstrap';
-import Task from "./Task";
+import TaskItem from "./task-item/TaskItem";
 import './tasks.css';
 import Filter from "../controls/Filter";
 import GroupActions from "../controls/GroupActions";
@@ -29,18 +29,18 @@ class Tasks extends React.Component {
 
                     <div className="mb-3">
                         <div className="section-name text-primary font-weight-bold">Tomorrow</div>
-                        <Task />
-                        <Task />
-                        <Task />
+                        <TaskItem />
+                        <TaskItem />
+                        <TaskItem />
                         <div className="section-name text-primary font-weight-bold">Next week</div>
-                        <Task />
-                        <Task />
+                        <TaskItem />
+                        <TaskItem />
                         <div className="section-name text-primary font-weight-bold">Next month</div>
-                        <Task />
+                        <TaskItem />
                         <div className="section-name text-primary font-weight-bold">Later</div>
-                        <Task />
-                        <Task />
-                        <Task />
+                        <TaskItem />
+                        <TaskItem />
+                        <TaskItem />
                     </div>
 
                     <NewTaskButton />
