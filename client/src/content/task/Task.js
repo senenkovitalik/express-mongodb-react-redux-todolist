@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {
+  Container,
   Row,
   Col,
   Form,
@@ -8,17 +9,25 @@ import {
   InputGroupText,
   Button
 } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCalendarAlt,
+  faTimesCircle,
+  faClock,
+  faPlusCircle
+} from '@fortawesome/free-solid-svg-icons';
 
 export default class Task extends Component {
   render() {
     return (
+      <Container>
       <Row className="justify-content-center">
         <Col lg="7">
           <Form>
             {/*{<!-- Name -->}*/}
             <div className="mt-2">
               <label htmlFor="name"><strong>What need to done?</strong></label>
-              <input className="form-control" id="name" name="title" value="Task #1" />
+              <input className="form-control" id="name" name="title" defaultValue="Task #1" />
             </div>
 
             {/*{<!-- Done -->}*/}
@@ -39,13 +48,13 @@ export default class Task extends Component {
                   <input type="date" className="form-control" />
                   <div className="input-group-append">
                     <InputGroupText>
-                        <i className="far fa-calendar-alt" style="width: 16px;" />
+                      <FontAwesomeIcon icon={faCalendarAlt} style={{width: 16+'px'}} />
                     </InputGroupText>
                   </div>
                 </InputGroup>
 
                 <Button outline color="danger">
-                  <i className="fas fa-times-circle" />
+                  <FontAwesomeIcon icon={faTimesCircle} />
                 </Button>
               </div>
 
@@ -57,14 +66,14 @@ export default class Task extends Component {
                   <input type="time" className="form-control" />
                   <div className="input-group-append">
                     <InputGroupText>
-                        <i className="far fa-clock" />
+                      <FontAwesomeIcon icon={faClock} />
                     </InputGroupText>
                   </div>
                 </InputGroup>
 
                 {/*{<!-- Remove button-->}*/}
                 <Button outline color="danger">
-                  <i className="fas fa-times-circle" />
+                  <FontAwesomeIcon icon={faTimesCircle} />
                 </Button>
               </div>
             </FormGroup>
@@ -99,7 +108,7 @@ export default class Task extends Component {
                   <option>List #3</option>
                 </select>
                 <Button outline color="info">
-                  <i className="fas fa-plus-circle" />
+                  <FontAwesomeIcon icon={faPlusCircle} />
                 </Button>
               </div>
             </FormGroup>
@@ -112,6 +121,7 @@ export default class Task extends Component {
           </Form>
         </Col>
       </Row>
+      </Container>
     );
   }
 }
