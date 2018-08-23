@@ -16,9 +16,12 @@ module.exports = {
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
-        use: [
-          'file-loader'
-        ]
+        use: {
+          loader: 'file-loader',
+          options: {
+            outputPath: 'assets/fonts'
+          }
+        }
       }
     ]
   },
@@ -32,7 +35,7 @@ module.exports = {
     })
   ],
   output: {
-    filename: 'assets/[name].[chunkhash].js',
+    filename: 'assets/js/[name].[chunkhash].js',
     path: path.resolve(__dirname, 'dist')
   }
 };

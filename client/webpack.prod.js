@@ -12,9 +12,16 @@ module.exports = merge(common, {
       new UglifyJsPlugin({
         cache: true,
         parallel: true,
-        sourceMap: true
+        sourceMap: true,
+        extractComments: true
       }),
-      new OptimizeCSSAssetsPlugin({})
+      new OptimizeCSSAssetsPlugin({
+        cssProcessorOptions: {
+          discardComments: {
+            removeAll: true
+          }
+        }
+      })
     ],
   },
   module: {
@@ -27,16 +34,19 @@ module.exports = merge(common, {
         ]
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          'file-loader'
-        ]
+        test: /\.(png|svg|jpg|jpeg|gif)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            outputPath: 'assets/imgs'
+          }
+        }
       }
     ]
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "assets/[name].[chunkhash].css",
+      filename: "assets/css/[name].[chunkhash].css",
       chunkFilename: '[id].css'
     }),
     new webpack.DefinePlugin({
