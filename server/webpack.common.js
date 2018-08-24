@@ -1,12 +1,14 @@
 const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   context: path.resolve(__dirname),
   entry: './src/index.js',
   target: 'node',
-  externals: [nodeExternals()],
+  externals: [nodeExternals({
+    whitelist: [/^bootstrap/]
+  })],
   module: {
     rules: [
       {
