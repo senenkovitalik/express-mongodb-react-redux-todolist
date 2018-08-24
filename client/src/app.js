@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  BrowserRouter as Router,
   Route
 } from 'react-router-dom';
 import Header from "./Header";
@@ -19,19 +18,17 @@ class App extends React.Component {
 
     render() {
         return (
-          <Router>
-            <div>
-              <Header />
+          <div>
+            <Header />
 
-              <Route exact path="/" component={Home} />
-              <Route path="/login" component={Login}/>
-              <Route path="/signup" component={Signup} />
-              <Route path="/lists" component={Tasks} />
-              <Route path="/task" component={Task} />
+            <Route exact path="/" component={Home} />
+            <Route path="/login" component={Login}/>
+            <Route path="/signup" component={Signup} />
+            <Route path="/list/1" component={Tasks} />
+            <Route path="/task" component={Task} />
 
-              <Footer />
-            </div>
-          </Router>
+            <Footer />
+          </div>
         )
     }
 }
