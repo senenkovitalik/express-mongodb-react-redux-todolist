@@ -4,6 +4,8 @@ const common = require('./webpack.common');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPugPlugin = require('html-webpack-pug-plugin');
 
 module.exports = merge(common, {
   mode: 'production',
@@ -49,6 +51,12 @@ module.exports = merge(common, {
       filename: "assets/css/[name].[chunkhash].css",
       chunkFilename: '[id].css'
     }),
+    new HtmlWebpackPlugin({
+        filename: 'index.pug',
+        template: './src/index.pug',
+        title: 'To Do List'
+    }),
+    new HtmlWebpackPugPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     }),

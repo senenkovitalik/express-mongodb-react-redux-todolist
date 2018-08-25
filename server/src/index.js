@@ -23,9 +23,8 @@ const app = express();
 
 app.use(morgan('dev'));
 
-// app.set('layouts', process.cwd() + '/server/src/layouts');
-// app.set('views', app.get('layouts'));
-// app.set('view engine', 'pug');
+app.set('views', process.cwd() + '/client/dist');
+app.set('view engine', 'pug');
 
 app.use(express.static(process.cwd()+'/client/dist/'));
 
@@ -48,7 +47,7 @@ app.use("/api", routes);
 app.get('*', (req, res) => {
   const context = {};
 
-  const html = ReactDOMServer.renderToString(
+  const content = ReactDOMServer.renderToString(
     <StaticRouter location={req.url} context={context}>
       <App />
     </StaticRouter>
@@ -60,11 +59,7 @@ app.get('*', (req, res) => {
     });
     res.end();
   } else {
-    res.write(`
-      <!doctype html>
-      <div id="app">${html}</div>
-    `);
-    res.end();
+    res.render('index', { content: content });
   }
 });
 

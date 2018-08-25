@@ -28,10 +28,6 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(['dist'], {
       root: path.resolve(__dirname)
-    }),
-    new HtmlWebpackPlugin({
-      title: 'React App',
-      template: './src/index.html',
     })
   ],
   output: {
