@@ -4,16 +4,7 @@ const NodemonPlugin = require('nodemon-webpack-plugin');
 
 module.exports = merge(common, {
   mode: 'development',
-  module: {
-    rules: [
-      {
-        test: /\.(css|png|svg|jpg|jpeg|gif|woff|woff2|eot|ttf|otf)$/,
-        use: {
-          loader: 'ignore-loader'
-        }
-      },
-    ]
-  },
+  devtool: 'inline-source-map',
   plugins: [
     new NodemonPlugin()
   ]
