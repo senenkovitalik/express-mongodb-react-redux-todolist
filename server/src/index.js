@@ -8,7 +8,7 @@ const MongoStore = require('connect-mongo')(session);
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { StaticRouter } from 'react-router';
-import App from '../../client/src/app';
+import App from '../../client/src/App';
 
 mongoose.set('debug', true);
 mongoose.connect('mongodb://localhost/test');

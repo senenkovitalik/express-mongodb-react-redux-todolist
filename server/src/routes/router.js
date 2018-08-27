@@ -12,6 +12,8 @@ router.post('/signup', (req, res) => {
 
   const userData = { username, email, password };
 
+  // also check user data here
+
   // if different passwords
   if (!validatePasswords(password, conf_password)) {
     return res.status(400).send('Bad Request (Invalid data)');

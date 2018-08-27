@@ -5,9 +5,7 @@ function validatePasswords(pass, conf_pass) {
     const password = pass.trim();
     const conf_password = conf_pass.trim();
 
-    if (password.length > 8 && password.length < 25) {
-      return password === conf_password;
-    }
+    return password === conf_password;
   }
   return false;
 }
