@@ -6,7 +6,12 @@ module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: './dist'
+    compress: true,
+    contentBase: './dist',
+    historyApiFallback: true,
+    proxy: {
+      '/api': 'http://localhost:3000'
+    }
   },
   module: {
     rules: [
