@@ -36,7 +36,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Header logged={this.state.logged}/>
+        <Header logged={this.state.logged} logout={this.logout} />
 
         <Route exact path="/" component={Home}/>
         <Route path="/login" component={Login}/>

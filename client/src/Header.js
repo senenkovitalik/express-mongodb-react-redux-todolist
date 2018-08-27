@@ -1,59 +1,69 @@
 import React from 'react';
 import {
-    NavbarBrand,
-    NavbarToggler,
-    Collapse,
-    Nav,
-    NavItem,
+  NavbarBrand,
+  NavbarToggler,
+  Collapse,
+  Nav,
+  NavItem,
   NavLink,
-    Navbar
+  Navbar,
+  Button
 } from "reactstrap";
-import { NavLink as nav, Link } from 'react-router-dom';
+import {NavLink as nav, Link} from 'react-router-dom';
 
 class Header extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.toggleNavbar = this.toggleNavbar.bind(this);
-        this.state = {
-            collapsed: true
-        };
-    }
+    this.state = { collapsed: true };
 
-    toggleNavbar() {
-        this.setState({
-            collapsed: !this.state.collapsed
-        });
-    }
+    this.toggleNavbar = this.toggleNavbar.bind(this);
+    this.logout = this.logout.bind(this);
+  }
 
-    render() {
-        return (
-            <Navbar color="dark" dark expand="md">
-                <NavbarBrand href='/' className="mr-auto">To Do</NavbarBrand>
-                <NavbarToggler onClick={this.toggleNavbar}/>
-                <Collapse isOpen={!this.state.collapsed} navbar>
-                    <Nav className="ml-auto" navbar>
-                        <NavItem>
-                            <NavLink tag={nav} to="/">Home</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink tag={nav} to="/list/1">Lists</NavLink>
-                        </NavItem>
-                      <NavItem>
-                        <NavLink tag={nav} to="/task">Task</NavLink>
-                      </NavItem>
-                      <NavItem>
-                        <NavLink tag={nav} to="/about_us">About us</NavLink>
-                      </NavItem>
-                      <div className="form-inline">
-                        <Link to="/login" className="btn btn-outline-success" role="button">Login</Link>
-                        <Link to="/signup" className="btn btn-outline-primary" role="button">Sign Up</Link>
-                      </div>
-                    </Nav>
-                </Collapse>
-            </Navbar>
-        );
-    }
+  toggleNavbar() {
+    this.setState({
+      collapsed: !this.state.collapsed
+    });
+  }
+
+  logout() {
+    fetch('/api/logout')
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => console.error(err));
+  }
+
+  render() {
+    return (
+      <Navbar color="dark" dark expand="md">
+        <NavbarBrand href='/' className="mr-auto">To Do</NavbarBrand>
+        <NavbarToggler onClick={this.toggleNavbar}/>
+        <Collapse isOpen={!this.state.collapsed} navbar>
+          <Nav className="ml-auto" navbar>
+            <NavItem>
+              <NavLink tag={nav} to="/">Home</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink tag={nav} to="/list/1">Lists</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink tag={nav} to="/task">Task</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink tag={nav} to="/about_us">About us</NavLink>
+            </NavItem>
+            <div className="form-inline">
+              { !this.props.logged && <Button tag={nav} to="/login" color="success" outline>Login</Button> }
+              { this.props.logged && <Button color="success" outline onClick={this.logout}>Logout</Button> }
+              { !this.props.logged && <Button tag={nav} to="/signup" color="primary" outline>Sign Up</Button> }
+            </div>
+          </Nav>
+        </Collapse>
+      </Navbar>
+    );
+  }
 }
 
 export default Header;
