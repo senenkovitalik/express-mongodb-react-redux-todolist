@@ -6,7 +6,8 @@ import {
   Col,
   Label,
   FormText,
-  Button
+  Button,
+  Alert
 } from 'reactstrap';
 
 import {
@@ -26,7 +27,10 @@ export default class Signup extends Component {
   constructor(props) {
     super(props);
 
+    this.state = { visible: false };
+
     this.handleValidSubmit = this.handleValidSubmit.bind(this);
+    this.onDismiss = this.onDismiss.bind(this);
   }
 
   handleValidSubmit(event, values) {
@@ -52,9 +56,15 @@ export default class Signup extends Component {
       if (res.ok && res.status === 201) {
         this.props.login();
         this.props.history.push('/');
+      } else if (res.status === 409) {
+        // try another email alert
+        this.setState({ visible: true })
       }
-
     }).catch(err => console.error(err));
+  }
+
+  onDismiss() {
+    this.setState({ visible: false });
   }
 
   render() {
@@ -68,6 +78,10 @@ export default class Signup extends Component {
                   <img src={icon} width="50px" height="50px"/>
                   <span className="text-uppercase font-weight-bold ml-1">Sign up</span>
                 </div>
+
+                <Alert color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
+                  Email already in use. Please, try another one.
+                </Alert>
 
                 <AvForm onValidSubmit={this.handleValidSubmit}>
                   <AvGroup>

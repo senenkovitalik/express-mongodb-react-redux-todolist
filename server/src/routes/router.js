@@ -26,14 +26,14 @@ router.post('/signup', (req, res) => {
       switch (err.name) {
         case 'MongoError':
           if (err.code === 11000) {
-            res.status(400).send('Bad Request (User already exists)');
+            res.status(409).send('Conflict (User already exists)');
           }
           break;
         case 'ValidationError':
           res.status(400).send('Bad Request (Invalid data)');
           break;
         case 'BulkWriteError':
-          res.status(400).send('Bad Request (User already exists)');
+          res.status(409).send('Conflict (User already exists)');
           break;
         default:
           res.status(500).send("Internal Server Error");
