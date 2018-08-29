@@ -1,19 +1,58 @@
 import React, {Component} from 'react';
+
 import {
   Container,
   Row,
   Col,
-  Form,
+  Label,
   FormGroup,
   Button
 } from 'reactstrap';
+
 import {
-  Link
-} from 'react-router-dom';
+  AvForm,
+  AvGroup,
+  AvInput,
+  AvFeedback
+} from'availity-reactstrap-validation';
+
+import { Link } from 'react-router-dom';
+
 import icon from './login.svg';
 import './login.css';
 
 export default class Login extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleValidSubmit = this.handleValidSubmit.bind(this);
+  }
+
+  handleValidSubmit(event, values) {
+    const data = [];
+    for(let prop in values) {
+      if (values.hasOwnProperty(prop)) {
+        let encKey = encodeURIComponent(prop);
+        let encVal = encodeURIComponent(values[prop]);
+        data.push(`${encKey}=${encVal}`);
+      }
+    }
+    const formBody = data.join("&");
+
+    fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+      },
+      body: formBody
+    }).then(res => {
+      if (res.ok && res.status === 200) {
+        this.props.login();
+        this.props.history.push('/');
+      }
+    }).catch(err => console.error(err));
+  }
+
   render() {
     return (
       <Container>
@@ -23,19 +62,33 @@ export default class Login extends Component {
               <img src={icon} width="50px" height="50px" />
               <span className="text-uppercase font-weight-bold ml-1">Login</span>
             </div>
-            <Form>
-              <FormGroup>
-                <label htmlFor="email" className="text-uppercase">Email address</label>
-                <input type="text" className="form-control" id="email" name="email" placeholder="Email address" />
-              </FormGroup>
-              <FormGroup>
-                <label htmlFor="password" className="text-uppercase">Password</label>
-                <input type="password" className="form-control" id="password" name="password" placeholder="Password" />
-              </FormGroup>
+            <AvForm onValidSubmit={this.handleValidSubmit}>
+              <AvGroup>
+                <Label for="email" className="text-uppercase">Email address</Label>
+                <AvInput type="text"
+                         className="form-control"
+                         id="email"
+                         name="email"
+                         placeholder="Email address"
+                         required
+                />
+                <AvFeedback>Email must looks like email@example.com</AvFeedback>
+              </AvGroup>
+              <AvGroup>
+                <Label for="password" className="text-uppercase">Password</Label>
+                <AvInput type="password"
+                         className="form-control"
+                         id="password"
+                         name="password"
+                         placeholder="Password"
+                         required
+                />
+                <AvFeedback>Please, type a correct password.</AvFeedback>
+              </AvGroup>
               <FormGroup>
                 <Button color="success" className="float-right">Login</Button>
               </FormGroup>
-            </Form>
+            </AvForm>
           </Col>
         </Row>
 

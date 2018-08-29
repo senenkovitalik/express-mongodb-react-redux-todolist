@@ -9,7 +9,7 @@ import {
   Navbar,
   Button
 } from "reactstrap";
-import {NavLink as nav, Link} from 'react-router-dom';
+import {NavLink as nav} from 'react-router-dom';
 
 class Header extends React.Component {
   constructor(props) {
@@ -30,7 +30,10 @@ class Header extends React.Component {
   logout() {
     fetch('/api/logout')
       .then(res => {
-        console.log(res)
+        if (res.ok && res.status === 200) {
+          this.props.logout();
+          this.props.history.push('/');
+        }
       })
       .catch(err => console.error(err));
   }

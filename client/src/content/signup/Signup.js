@@ -51,13 +51,13 @@ export default class Signup extends Component {
     }).then(res => {
       if (res.ok && res.status === 201) {
         this.props.login();
+        this.props.history.push('/');
       }
 
     }).catch(err => console.error(err));
   }
 
   render() {
-    console.log(this.props.logged);
     return (
       <Container>
         {!this.props.logged &&

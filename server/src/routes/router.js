@@ -22,8 +22,13 @@ router.post('/signup', (req, res) => {
   User.create(userData, (err, user) => {
 
     if (err) {
-      console.log(err.message);
+      console.log(err);
       switch (err.name) {
+        case 'MongoError':
+          if (err.code === 11000) {
+            res.status(400).send('Bad Request (User already exists)');
+          }
+          break;
         case 'ValidationError':
           res.status(400).send('Bad Request (Invalid data)');
           break;
@@ -66,7 +71,7 @@ router.get('/logout', (req, res) => {
       console.log(err);
       return res.status(500).send("Internal Server Error");
     }
-    res.redirect(302, '/');
+    res.status(200).send("OK");
   });
 });
 
