@@ -6,7 +6,8 @@ import {
   Col,
   Label,
   FormGroup,
-  Button
+  Button,
+  Alert
 } from 'reactstrap';
 
 import {
@@ -25,7 +26,10 @@ export default class Login extends Component {
   constructor(props) {
     super(props);
 
+    this.state = { visible: false };
+
     this.handleValidSubmit = this.handleValidSubmit.bind(this);
+    this.onDismiss = this.onDismiss.bind(this);
   }
 
   handleValidSubmit(event, values) {
@@ -46,11 +50,20 @@ export default class Login extends Component {
       },
       body: formBody
     }).then(res => {
+      console.log(res);
       if (res.ok && res.status === 200) {
         this.props.login();
         this.props.history.push('/');
       }
+      if (res.status === 401) {
+        // show invalid login/pass
+        this.setState({ visible: true });
+      }
     }).catch(err => console.error(err));
+  }
+
+  onDismiss() {
+    this.setState({ visible: false });
   }
 
   render() {
@@ -62,6 +75,9 @@ export default class Login extends Component {
               <img src={icon} width="50px" height="50px" />
               <span className="text-uppercase font-weight-bold ml-1">Login</span>
             </div>
+            <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+              Invalid email, password. Please, try again.
+            </Alert>
             <AvForm onValidSubmit={this.handleValidSubmit}>
               <AvGroup>
                 <Label for="email" className="text-uppercase">Email address</Label>
