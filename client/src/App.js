@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Route
 } from 'react-router-dom';
+import {withRouter} from 'react-router';
 import Header from "./Header";
 import Footer from "./Footer";
 import Home from './content/home/Home';
@@ -53,4 +54,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withRouter(App);
