@@ -39,8 +39,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Route exact path="/"
-               render={props => <Header {...props} logged={this.state.logged} logout={this.logout} /> } />
+        <Header history={this.props.history} logged={this.state.logged} logout={this.logout} />
 
         <Route exact path="/" component={Home}/>
         <Route path="/login" render={props => <Login {...props} login={this.login} />} />
