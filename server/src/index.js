@@ -44,7 +44,7 @@ const routes = require('./routes/router');
 app.use("/api", routes);
 
 // SSR
-app.get('*', (req, res) => {
+app.get(/^(?!\/api).+$/, (req, res) => {
   const context = {};
 
   const content = ReactDOMServer.renderToString(

@@ -75,7 +75,7 @@ export default class Login extends Component {
               <img src={icon} width="50px" height="50px" />
               <span className="text-uppercase font-weight-bold ml-1">Login</span>
             </div>
-            <Alert color="danger" isOpen={this.state.visible} toggle={this.onDismiss}>
+            <Alert color="danger" isOpen={this.state.alert} toggle={this.onDismiss}>
               Invalid email, password. Please, try again.
             </Alert>
             <AvForm onValidSubmit={this.handleValidSubmit}>

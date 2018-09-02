@@ -7,17 +7,24 @@ import {
   Label,
   FormText,
   Button,
-  Alert
+  Alert,
 } from 'reactstrap';
 
 import {
   AvForm,
   AvGroup,
   AvInput,
-  AvFeedback
+  AvFeedback,
 } from 'availity-reactstrap-validation';
 
 import { Link } from 'react-router-dom';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCheckCircle,
+  faTimesCircle,
+  faSpinner
+} from '@fortawesome/free-solid-svg-icons';
 
 import icon from './signup.svg';
 import './signup.css';
@@ -27,10 +34,23 @@ export default class Signup extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { visible: false };
+    this.state = {
+      alert: false,
+
+      spin_username: false,
+      show_username: false,
+      valid_username: false,
+
+      spin_email: false,
+      show_email: false,
+      valid_email: false
+    };
+
+    this.formRef = React.createRef();
 
     this.handleValidSubmit = this.handleValidSubmit.bind(this);
     this.onDismiss = this.onDismiss.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   handleValidSubmit(event, values) {
@@ -55,16 +75,40 @@ export default class Signup extends Component {
     }).then(res => {
       if (res.ok && res.status === 201) {
         this.props.login();
-        this.props.history.push('/');
-      } else if (res.status === 409) {
-        // try another email alert
-        this.setState({ visible: true })
+      } else {
+        // something happens
+        this.setState({ alert: true })
       }
     }).catch(err => console.error(err));
   }
 
   onDismiss() {
-    this.setState({ visible: false });
+    this.setState({ alert: false });
+  }
+
+  handleChange(e) {
+
+    const { name } = e.target;
+    const value = e.target.value.trim();
+    const { dirtyInputs, invalidInputs } = this.formRef.current.state;
+
+    this.setState({
+      [`show_${name}`]: dirtyInputs[name],
+      [`valid_${name}`]: !invalidInputs[name]
+    });
+
+    if (!invalidInputs[name]) {
+      this.setState({ [`spin_${name}`]: true });  // show spinner
+
+      fetch(`/api/check?param=${name}&val=${value}`, { method: 'GET' })
+        .then(res => {
+
+          this.setState({
+            [`spin_${name}`]: false,                // hide spinner
+            [`valid_${name}`]: res.status === 200   // show check
+          });
+        });
+    }
   }
 
   render() {
@@ -79,31 +123,55 @@ export default class Signup extends Component {
                   <span className="text-uppercase font-weight-bold ml-1">Sign up</span>
                 </div>
 
-                <Alert color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
-                  Email already in use. Please, try another one.
+                <Alert color="danger" isOpen={this.state.alert} toggle={this.onDismiss}>
+                  Something is wrong. Please, try again later or notify us by <a href="mailto:problems.todolist-team@gmail.com?Subject=Need%20help" target="_top">problems.todolist-team@gmail.com</a>.
                 </Alert>
 
-                <AvForm onValidSubmit={this.handleValidSubmit}>
+                <AvForm ref={this.formRef} onValidSubmit={this.handleValidSubmit}>
                   <AvGroup>
-                    <Label for="username" className="text-uppercase">Username</Label>
+                    <Label for="username" className="text-uppercase">
+                      Username{' '}
+                      {
+                        this.state.show_username && this.state.valid_username
+                        && <FontAwesomeIcon icon={faCheckCircle} style={{color: '#009C00' }} />
+                      }
+                      {
+                        this.state.show_username && !this.state.valid_username
+                        && <FontAwesomeIcon icon={faTimesCircle} style={{color: '#FF0000' }} />
+                      }
+                      { this.state.spin_username && <FontAwesomeIcon icon={faSpinner} /> }
+                    </Label>
                     <AvInput type="text"
                              className="form-control"
                              id="username"
                              name="username"
                              validate={{maxLength: {value: 20}, minLength: {value: 5}}}
                              placeholder="Username"
-                             required/>
+                             onChange={this.handleChange}
+                             required />
                     <AvFeedback>Type username</AvFeedback>
                     <FormText>Length 5-20 symbols.</FormText>
                   </AvGroup>
                   <AvGroup>
-                    <Label for="email" className="text-uppercase">Email address</Label>
+                    <Label for="email" className="text-uppercase">
+                      Email address{' '}
+                      {
+                        this.state.show_email && this.state.valid_email
+                        && <FontAwesomeIcon icon={faCheckCircle} style={{color: '#009C00' }} />
+                      }
+                      {
+                        this.state.show_email && !this.state.valid_email
+                        && <FontAwesomeIcon icon={faTimesCircle} style={{color: '#FF0000' }} />
+                      }
+                      { this.state.spin_email && <FontAwesomeIcon icon={faSpinner} /> }
+                    </Label>
                     <AvInput type="text"
                              className="form-control"
                              id="email"
                              name="email"
                              validate={{email: true}}
                              placeholder="Email address"
+                             onChange={this.handleChange}
                              required/>
                     <AvFeedback>Type correct email address.</AvFeedback>
                     <FormText>email@example.com</FormText>

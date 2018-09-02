@@ -48,6 +48,28 @@ router.post('/signup', (req, res) => {
   });
 });
 
+// check if username/email already exists in DB
+router.get('/check', (req, res) => {
+
+  const { param, val } = req.query;
+
+  if (param.trim() && val.trim()) {
+    User.findOne({ [param.trim()]: val.trim() }, (err, doc) => {
+      if (err) {
+        res.status(500).end();
+      } else {
+        if (doc) {
+          res.status(409).end();
+        } else {
+          res.status(200).end();
+        }
+      }
+    });
+  } else {
+    res.status(400).end();
+  }
+});
+
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
 
