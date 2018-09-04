@@ -58,9 +58,30 @@ class Header extends React.Component {
               <NavLink tag={nav} to="/about_us">About us</NavLink>
             </NavItem>
             <div className="form-inline">
-              { !this.props.logged && <Button tag={nav} to="/login" color="success" outline>Login</Button> }
-              { this.props.logged && <Button color="success" outline onClick={this.logout}>Logout</Button> }
-              { !this.props.logged && <Button tag={nav} to="/signup" color="primary" outline>Sign Up</Button> }
+              {
+                !this.props.logged &&
+                <Button tag={nav}
+                        to="/login"
+                        color="success"
+                        onClick={this.toggleNavbar}
+                        outline>Login</Button>
+              }
+              {
+                this.props.logged &&
+                <Button color="success"
+                        outline
+                        onClick={() => {
+                          this.logout(); this.toggleNavbar();
+                        }}>Logout</Button>
+              }
+              {
+                !this.props.logged &&
+                <Button tag={nav}
+                        to="/signup"
+                        color="primary"
+                        onClick={this.toggleNavbar}
+                        outline>Sign Up</Button>
+              }
             </div>
           </Nav>
         </Collapse>
