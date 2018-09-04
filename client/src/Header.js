@@ -48,12 +48,18 @@ class Header extends React.Component {
             <NavItem>
               <NavLink tag={nav} to="/">Home</NavLink>
             </NavItem>
-            <NavItem>
-              <NavLink tag={nav} to="/list/1">Lists</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={nav} to="/task">Task</NavLink>
-            </NavItem>
+            {
+              this.props.logged &&
+              <NavItem>
+                <NavLink tag={nav} to="/list/1">Lists</NavLink>
+              </NavItem>
+            }
+            {
+              this.props.logged &&
+              <NavItem>
+                <NavLink tag={nav} to="/task">Task</NavLink>
+              </NavItem>
+            }
             <NavItem>
               <NavLink tag={nav} to="/about_us">About us</NavLink>
             </NavItem>
