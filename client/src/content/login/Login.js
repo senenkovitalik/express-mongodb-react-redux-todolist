@@ -26,7 +26,7 @@ export default class Login extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { visible: false };
+    this.state = { alert: false };
 
     this.handleValidSubmit = this.handleValidSubmit.bind(this);
     this.onDismiss = this.onDismiss.bind(this);
@@ -57,13 +57,13 @@ export default class Login extends Component {
       }
       if (res.status === 401) {
         // show invalid login/pass
-        this.setState({ visible: true });
+        this.setState({ alert: true });
       }
     }).catch(err => console.error(err));
   }
 
   onDismiss() {
-    this.setState({ visible: false });
+    this.setState({ alert: false });
   }
 
   render() {
