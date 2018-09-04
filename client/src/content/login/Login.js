@@ -22,6 +22,8 @@ import { Link } from 'react-router-dom';
 import icon from './login.svg';
 import './login.css';
 
+import { createFormData } from '../../utils';
+
 export default class Login extends Component {
   constructor(props) {
     super(props);
@@ -33,24 +35,15 @@ export default class Login extends Component {
   }
 
   handleValidSubmit(event, values) {
-    const data = [];
-    for(let prop in values) {
-      if (values.hasOwnProperty(prop)) {
-        let encKey = encodeURIComponent(prop);
-        let encVal = encodeURIComponent(values[prop]);
-        data.push(`${encKey}=${encVal}`);
-      }
-    }
-    const formBody = data.join("&");
-
-    fetch('/api/login', {
+    const opts = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
       },
-      body: formBody
-    }).then(res => {
-      console.log(res);
+      body: createFormData(values)
+    };
+
+    fetch('/api/login', opts).then(res => {
       if (res.ok && res.status === 200) {
         this.props.login();
         this.props.history.push('/');

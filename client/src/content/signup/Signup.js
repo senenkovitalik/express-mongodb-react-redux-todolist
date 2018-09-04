@@ -29,6 +29,8 @@ import {
 import icon from './signup.svg';
 import './signup.css';
 
+import { createFormData } from '../../utils';
+
 export default class Signup extends Component {
 
   constructor(props) {
@@ -54,25 +56,15 @@ export default class Signup extends Component {
   }
 
   handleValidSubmit(event, values) {
-    const data = [];
-
-    for(let prop in values) {
-      if (values.hasOwnProperty(prop)) {
-        let encKey = encodeURIComponent(prop);
-        let encVal = encodeURIComponent(values[prop]);
-        data.push(`${encKey}=${encVal}`);
-      }
-    }
-
-    const formBody = data.join("&");
-
-    fetch('/api/signup', {
+    const opts = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
       },
-      body: formBody
-    }).then(res => {
+      body: createFormData(values)
+    };
+
+    fetch('/api/signup', opts).then(res => {
       if (res.ok && res.status === 201) {
         this.props.login();
       } else {
