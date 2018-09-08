@@ -5,7 +5,10 @@ const User = require('../db/User');
 
 const { handleMongooseError } = require('../utils');
 
-// get all user's lists
+/*
+ Get all user's lists
+  */
+
 listRouter.get('/', (req, res) => {
   User.findById(req.session.user_id, (err, user) => {
     if (err) handleMongooseError(err, res);
@@ -22,7 +25,10 @@ listRouter.get('/:id', (req, res) => {
   });
 });
 
-// create task list
+/*
+ Create task list
+  */
+
 listRouter.post('/:title', (req, res) => {
   const { title } = req.params;
 
@@ -34,13 +40,17 @@ listRouter.post('/:title', (req, res) => {
       .then(() => {
         res.location(`/api/lists/${list._id}`);
         res.status(201);
-        res.end();
+        // res.end();
+        res.json({ listID: list._id });
       })
       .catch(err => handleMongooseError(err, res));
   })
 });
 
-// update list title
+/*
+ Update list title
+  */
+
 listRouter.patch('/:id', (req, res) => {
   res.status(405).end();
 });
@@ -65,7 +75,10 @@ listRouter.patch('/:id/title/:title', (req, res) => {
     .catch(err => handleMongooseError(err, res));
 });
 
-// update visibility filter
+/*
+ Update visibility filter
+  */
+
 listRouter.patch('/:id/visibility_filter', (req, res) => {
   res.status(405).end();
 });
@@ -85,6 +98,10 @@ listRouter.patch('/:id/visibility_filter/:filter', (req, res) => {
     })
     .catch(err => handleMongooseError(err, res));
 });
+
+/*
+  Delete list
+ */
 
 listRouter.delete('/', (req, res) => {
   res.status(405).end();
