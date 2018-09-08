@@ -18,7 +18,8 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      logged: sessionStorage.getItem(LOGGED)
+      logged: true
+        // sessionStorage.getItem(LOGGED)
     };
 
     this.login = this.login.bind(this);
