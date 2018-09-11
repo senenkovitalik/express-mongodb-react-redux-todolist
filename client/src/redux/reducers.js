@@ -41,10 +41,15 @@ const store = {
 function lists(state = {}, action) {
   switch (action.type) {
     case ADD_LIST:
+      const { list } = action;
       return Object.assign({}, state, {
-        id: action.id,
-        title: action.text,
-        tasks: []
+        [list._id]: {
+          id: list._id,
+          title: list.title,
+          tasks: list.tasks,
+          created_at: list.created_at,
+          modified_at: list.modified_at
+        }
       });
     case REMOVE_LIST:
       const newState = Object.assign({}, state);

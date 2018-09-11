@@ -40,8 +40,7 @@ listRouter.post('/:title', (req, res) => {
       .then(() => {
         res.location(`/api/lists/${list._id}`);
         res.status(201);
-        // res.end();
-        res.json({ listID: list._id });
+        res.json({ list });
       })
       .catch(err => handleMongooseError(err, res));
   })

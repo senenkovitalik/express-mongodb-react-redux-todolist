@@ -51,7 +51,7 @@ class Header extends React.Component {
             {
               this.props.logged &&
               <NavItem>
-                <NavLink tag={nav} to="/list/1">Lists</NavLink>
+                <NavLink tag={nav} to="/lists">Lists</NavLink>
               </NavItem>
             }
             {

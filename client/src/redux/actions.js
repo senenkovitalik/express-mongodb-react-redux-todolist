@@ -35,21 +35,22 @@ export function setCurrentList(id) {
 export function createList(text) {
   return dispatch =>
     fetch(`/api/lists/${encodeURIComponent(text)}`, { method: 'POST' })
-      .then((res, err) => {
+      .then(res => {
         if (res.ok && res.status === 201) {
           return res.json();
         } else {
-          return console.log('An error occurred,', err);
+          return console.log('An error occurred');
         }
       })
-      .then(json => dispatch(addList(text, json.listID)))
+      .then(json => {
+        dispatch(addList(json.list))
+      })
 }
 
-export function addList(text, id) {
+export function addList(list) {
   return {
     type: ADD_LIST,
-    text,
-    id
+    list
   }
 }
 

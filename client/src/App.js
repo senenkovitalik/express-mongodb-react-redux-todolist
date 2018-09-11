@@ -8,6 +8,7 @@ import Footer from "./Footer";
 import Home from './content/home/Home';
 import Login from './content/login/Login';
 import Signup from './content/signup/Signup';
+import { ListsContainer } from './content/lists/ListsContainer';
 import Tasks from "./content/tasks/Tasks";
 import Task from "./content/task/Task";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -46,6 +47,7 @@ class App extends React.Component {
         <Route path="/login" render={props => <Login {...props} login={this.login} />} />
         <Route path="/signup"
                render={props => <Signup {...props} login={this.login} logged={this.state.logged} />}/>
+        <Route path="/lists" component={ListsContainer} />
         <Route path="/list/1" component={Tasks}/>
         <Route path="/task" component={Task}/>
 
