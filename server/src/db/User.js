@@ -46,14 +46,10 @@ UserSchema.pre('update', function(next) {
   const { password } = this.getUpdate();
 
   if (password) {
-    bcrypt.hash(password, 10, (err, hash) => {
-      if (err) {
-        console.log(err);
-        return next(err);
-      }
+    bcrypt.hash(password, 10).then(hash => {
       this.update({}, { password: hash });
       next();
-    });
+    }).catch(err => next(err));
   } else {
     next();
   }
@@ -61,19 +57,21 @@ UserSchema.pre('update', function(next) {
 
 UserSchema.pre('save', function(next) {
   const user = this;
-  bcrypt.hash(user.password, 10, (err, hash) => {
-    if (err) {
-      console.log(err);
-      return next(err);
-    }
+
+  bcrypt.hash(user.password, 10).then(hash => {
     user.password = hash;
     next();
-  });
+  }).catch(err => next(err));
 });
 
 UserSchema.statics.authenticate = (email, password, callback) => {
-  User.findOne({ email })
-    .exec((err, user) => {
+  User.findOne({ email }).exec()
+    .then(user => {
+      bcrypt.compare(password, user.password)
+        .then(res => res ? callback(null, user) : callback())
+        .catch(() => callback());
+    })
+    .catch(err => {
       if (err) {
         return callback(err);
       } else if (!user) {
@@ -81,14 +79,6 @@ UserSchema.statics.authenticate = (email, password, callback) => {
         err.status = 401; // Unauthorized
         return callback(err);
       }
-
-      bcrypt.compare(password, user.password, (err, result) => {
-        if (result === true) {
-          return callback(null, user);
-        } else {
-          return callback();
-        }
-      })
     })
 };
 
