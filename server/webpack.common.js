@@ -7,7 +7,7 @@ module.exports = {
   entry: './src/index.js',
   target: 'node',
   externals: [nodeExternals({
-    whitelist: [/^bootstrap/]
+    whitelist: [/^bootstrap/, /^@fortawesome/]
   })],
   module: {
     rules: [
