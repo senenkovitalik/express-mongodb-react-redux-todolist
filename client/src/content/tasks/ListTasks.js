@@ -10,7 +10,7 @@ import GroupActions from "../controls/GroupActions";
 import ListsDropdown from "../controls/ListsDropdown";
 import NewTaskButton from "../newTaskButton/NewTaskButton";
 
-class Tasks extends React.Component {
+class ListTasks extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -50,4 +50,4 @@ class Tasks extends React.Component {
     }
 }
 
-export default Tasks;
+export default ListTasks;

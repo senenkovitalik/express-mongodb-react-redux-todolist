@@ -21,7 +21,8 @@ export default class ListItem extends Component {
 
   render() {
     return (
-      <Card className="task w-100">
+      <Card className="task w-100"
+            onClick={() => this.props.history.push(`/lists/${this.props.list.id}`)}>
         <CardBody>
           <div className="form-check">
             <div className="d-flex flex-row justify-content-between">
