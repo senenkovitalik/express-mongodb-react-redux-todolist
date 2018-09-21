@@ -4,6 +4,7 @@ export const REMOVE_TASK = 'REMOVE_TASK';
 export const UPDATE_TASK = 'UPDATE_TASK';
 
 export const SET_CURRENT_LIST = 'SET_CURRENT_LIST';
+export const GET_LISTS = 'GET_LISTS';
 export const ADD_LIST = 'ADD_LIST';
 export const REMOVE_LIST = 'REMOVE_LIST';
 export const UPDATE_LIST = 'UPDATE_LIST';
@@ -32,19 +33,36 @@ export function setCurrentList(id) {
   }
 }
 
+export function fetchLists() {
+  return dispatch =>
+    fetch(`/api/lists`, { method: 'GET' })
+      .then(res => res.ok && res.status === 200
+          ? res.json()
+          : null
+      )
+      .then(json => dispatch(getLists(json)))
+      .catch(err => console.log('An error occurred', err))
+}
+
+export function getLists(lists) {
+  return {
+    type: GET_LISTS,
+    lists
+  }
+}
+
 export function createList(text) {
   return dispatch =>
     fetch(`/api/lists/${encodeURIComponent(text)}`, { method: 'POST' })
       .then(res => {
         if (res.ok && res.status === 201) {
           return res.json();
-        } else {
-          return console.log('An error occurred');
         }
       })
       .then(json => {
         dispatch(addList(json.list))
       })
+      .catch(err => console.log('An error occurred', err))
 }
 
 export function addList(list) {

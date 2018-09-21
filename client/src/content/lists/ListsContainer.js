@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { createList } from '../../redux/actions';
+import { createList, fetchLists } from '../../redux/actions';
 import Lists from './Lists';
 
 const mapStateToProps = state => {
@@ -10,6 +10,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    fetchLists: () => {
+      dispatch(fetchLists())
+    },
     createList: title => {
       dispatch(createList(title));
     }

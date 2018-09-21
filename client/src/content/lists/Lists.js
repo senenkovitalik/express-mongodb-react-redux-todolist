@@ -61,4 +61,8 @@ export default class Lists extends Component {
       </Container>
     )
   }
+
+  componentDidMount() {
+    this.props.fetchLists();
+  }
 }

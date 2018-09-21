@@ -4,6 +4,7 @@ import {
   TOGGLE_TASK,
   REMOVE_TASK,
   UPDATE_TASK,
+  GET_LISTS,
   ADD_LIST,
   REMOVE_LIST,
   UPDATE_LIST,
@@ -40,21 +41,45 @@ const store = {
 
 function lists(state = {}, action) {
   switch (action.type) {
-    case ADD_LIST:
-      const { list } = action;
+    case GET_LISTS: {
+      const {lists} = action;
+
+      let newState = {};
+
+      for (let id in lists) {
+        if (lists.hasOwnProperty(id)) {
+          let list = lists[id];
+
+          newState = Object.assign({}, newState, {
+            [id]: {
+              id: list._id,
+              title: list.title,
+              tasks: list.tasks, // array of task id
+              created_at: list.created_at,
+              modified_at: list.modified_at
+            }
+          })
+        }
+      }
+      return newState;
+    }
+    case ADD_LIST: {
+      const {list} = action;
       return Object.assign({}, state, {
         [list._id]: {
           id: list._id,
           title: list.title,
-          tasks: list.tasks,
+          tasks: list.tasks, // only id
           created_at: list.created_at,
           modified_at: list.modified_at
         }
       });
-    case REMOVE_LIST:
+    }
+    case REMOVE_LIST: {
       const newState = Object.assign({}, state);
       delete newState[action.id];
       return newState;
+    }
     /*
      * for other actions
      */
