@@ -75,13 +75,11 @@ export function addList(list) {
 export function deleteList(id) {
   return dispatch =>
     fetch(`/api/lists/${encodeURIComponent(id)}`, { method: 'DELETE' })
-      .then((res, err) => {
-        if (res.ok && res.status === 204) {
-          dispatch(removeList(id));
-        } else {
-          return console.log('An error occurred,', err);
-        }
-      });
+      .then(res => res.ok && res.status === 204
+        ? dispatch(removeList(id))
+        : null
+      )
+      .catch(err => console.log('An error occurred,', err))
 }
 
 export function removeList(id) {

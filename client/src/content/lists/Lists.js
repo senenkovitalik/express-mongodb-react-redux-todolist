@@ -53,7 +53,7 @@ export default class Lists extends Component {
             }
             {
               !!listArr.length
-                ? listArr.map(l => <ListItem key={l.id} list={l} />)
+                ? listArr.map(l => <ListItem key={l.id} list={l} deleteList={this.props.deleteList} />)
                 : <p>You don't have lists yet)</p>
             }
           </Col>

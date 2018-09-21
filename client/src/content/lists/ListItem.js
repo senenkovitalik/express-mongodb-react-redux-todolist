@@ -30,14 +30,25 @@ export default class ListItem extends Component {
                 <span className="text-dark"><small>{this.props.list.created_at}</small></span>
               </div>
               <div>
-                <Button onClick={this.togglePopover} color='danger' id={`id_${this.props.list.id}`}>
+                <Button onClick={this.togglePopover}
+                        color='danger'
+                        id={`id_${this.props.list.id}`}>
                   <FontAwesomeIcon icon={faTrashAlt} />
                 </Button>
-                <Popover placement="left" isOpen={this.state.popoverOpen} toggle={this.togglePopover} target={`id_${this.props.list.id}`}>
+                <Popover placement="left"
+                         isOpen={this.state.popoverOpen}
+                         toggle={this.togglePopover}
+                         target={`id_${this.props.list.id}`}>
                   <PopoverHeader>Are you really want to delete this list?</PopoverHeader>
                   <PopoverBody className="d-flex justify-content-center">
-                    <Button color="danger" className="mr-1">Delete</Button>
-                    <Button color="primary" className="ml-1" onClick={this.togglePopover}>Cancel</Button>
+                    <Button color="danger"
+                            className="mr-1"
+                            onClick={() => this.props.deleteList(this.props.list.id)}
+                    >Delete</Button>
+                    <Button color="primary"
+                            className="ml-1"
+                            onClick={this.togglePopover}
+                    >Cancel</Button>
                   </PopoverBody>
                 </Popover>
               </div>
