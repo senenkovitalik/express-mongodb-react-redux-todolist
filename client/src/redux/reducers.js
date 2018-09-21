@@ -51,7 +51,7 @@ function lists(state = {}, action) {
           let list = lists[id];
 
           newState = Object.assign({}, newState, {
-            [id]: {
+            [list._id]: {
               id: list._id,
               title: list.title,
               tasks: list.tasks, // array of task id
@@ -69,7 +69,7 @@ function lists(state = {}, action) {
         [list._id]: {
           id: list._id,
           title: list.title,
-          tasks: list.tasks, // only id
+          tasks: list.tasks, // there will be empty array, do nothing
           created_at: list.created_at,
           modified_at: list.modified_at
         }
@@ -78,6 +78,7 @@ function lists(state = {}, action) {
     case REMOVE_LIST: {
       const newState = Object.assign({}, state);
       delete newState[action.id];
+      // also we need to remove tasks
       return newState;
     }
     /*
@@ -88,6 +89,18 @@ function lists(state = {}, action) {
   }
 }
 
+function tasks(state = {}, action) {
+  switch (action.type) {
+    case GET_LISTS:
+      return state;
+    case ADD_TASK:
+      break;
+    default:
+      return state;
+  }
+}
+
 export const todoApp = combineReducers({
-  lists
+  lists,
+  tasks
 });
