@@ -10,7 +10,7 @@ import Home from './content/home/Home';
 import Login from './content/login/Login';
 import Signup from './content/signup/Signup';
 import { ListsContainer } from './content/lists/ListsContainer';
-import ListTasks from "./content/tasks/ListTasks";
+import { ListTasksContainer } from "./content/tasks/ListTasksContainer";
 import Task from "./content/task/Task";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {LOGGED} from "./constants";
@@ -20,8 +20,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      logged: true
-        // sessionStorage.getItem(LOGGED)
+      logged: sessionStorage.getItem(LOGGED)
     };
 
     this.login = this.login.bind(this);
@@ -55,7 +54,7 @@ class App extends React.Component {
                 login={this.login}
                 logged={this.state.logged} />}
           />
-          <Route path="/lists/:id" component={ListTasks}/>
+          <Route path="/lists/:id" render={props => <ListTasksContainer {...props} />}/>
           <Route path="/lists" render={props => <ListsContainer history={props.history} />} />
           <Route path="/task" component={Task}/>
           <Route path="*" render={() => <h1>404 Not Found</h1>} />

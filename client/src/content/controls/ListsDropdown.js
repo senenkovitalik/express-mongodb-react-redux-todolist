@@ -1,25 +1,40 @@
 import React from 'react';
-import { Col, Input, FormGroup } from "reactstrap";
+import {Col, Input, FormGroup} from "reactstrap";
 
 class ListsDropdown extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+  constructor(props) {
+    super(props);
 
-    render() {
-        return (
-            <FormGroup row>
-                <label htmlFor="list" className="col-2 col-form-label">List</label>
-                <Col xs="10">
-                    <Input type="select" name="list" className="form-control" id="list">
-                        <option>List #1</option>
-                        <option>List #2</option>
-                        <option>List #3</option>
-                    </Input>
-                </Col>
-            </FormGroup>
-        );
-    }
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    event.preventDefault();
+    this.props.setCurrentList(event.target.value);
+  }
+
+  render() {
+    return (
+      <FormGroup row>
+        <label htmlFor="list" className="col-2 col-form-label">List</label>
+        <Col xs="10">
+          <Input
+            type="select"
+            name="list"
+            className="form-control"
+            id="list"
+            value={this.props.current}
+            onChange={this.handleChange}
+          >
+            {
+              Object.values(this.props.lists)
+                .map(l => <option key={l.id} value={l.id}>{l.title}</option>)
+            }
+          </Input>
+        </Col>
+      </FormGroup>
+    );
+  }
 }
 
 export default ListsDropdown;
