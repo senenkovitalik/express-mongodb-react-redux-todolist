@@ -21,6 +21,16 @@ export const VisibilityFilter = {
   Task
  */
 
+export function createTask() {
+
+}
+
+export function addTask(task) {
+  return {
+    type: ADD_TASK,
+    task
+  }
+}
 
 /*
   List

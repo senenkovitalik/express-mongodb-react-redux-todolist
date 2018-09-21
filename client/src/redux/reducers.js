@@ -54,7 +54,7 @@ function lists(state = {}, action) {
             [list._id]: {
               id: list._id,
               title: list.title,
-              tasks: list.tasks, // array of task id
+              tasks: list.tasks.map(t => t._id),
               created_at: list.created_at,
               modified_at: list.modified_at
             }
@@ -91,8 +91,17 @@ function lists(state = {}, action) {
 
 function tasks(state = {}, action) {
   switch (action.type) {
-    case GET_LISTS:
-      return state;
+    case GET_LISTS: {
+      const newState = {};
+
+      action.lists.forEach(l => {
+        l.tasks.forEach(t => Object.assign({}, newState, {
+          [t._id]: t
+        }));
+      });
+
+      return newState;
+    }
     case ADD_TASK:
       break;
     default:
