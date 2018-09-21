@@ -30,7 +30,7 @@ app.use(express.static(process.cwd()+'/client/dist/'));
 
 app.use(session({
   secret: 'vEry_$tr0ng-P@$$',
-  resave: true,
+  resave: false,
   saveUninitialized: false,
   store: new MongoStore({
     mongooseConnection: db
