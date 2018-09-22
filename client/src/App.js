@@ -20,22 +20,26 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      logged: sessionStorage.getItem(LOGGED)
+      logged: this.isNode().sessionStorage ? sessionStorage.getItem(LOGGED) : false
     };
 
+    this.isNode = this.isNode.bind(this);
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
   }
 
+  isNode() {
+    return typeof process === 'object' && !!process.versions.node ? global : window;
+  }
+
   login() {
     this.setState({ logged: true });
-    sessionStorage.setItem(LOGGED, '1');
-
+    this.isNode().sessionStorage.setItem(LOGGED, '1');
   }
 
   logout() {
     this.setState({ logged: false });
-    sessionStorage.removeItem(LOGGED);
+    this.isNode().sessionStorage.removeItem(LOGGED);
   }
 
   render() {
