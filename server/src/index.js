@@ -29,9 +29,10 @@ app.set('view engine', 'pug');
 app.use(express.static(process.cwd()+'/client/dist/'));
 
 app.use(session({
+  cookie: { secure: false, maxAge: 86400 },
   secret: 'vEry_$tr0ng-P@$$',
-  resave: false,
-  saveUninitialized: false,
+  resave: true,
+  saveUninitialized: true,
   store: new MongoStore({
     mongooseConnection: db
   })
