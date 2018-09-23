@@ -1,3 +1,5 @@
+import {AppContainer} from "../../client/src/AppContainer";
+
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -7,11 +9,15 @@ const MongoStore = require('connect-mongo')(session);
 
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { StaticRouter } from 'react-router';
-import App from '../../client/src/App';
+import {StaticRouter} from 'react-router';
+// import App from '../../client/src/App';
 
 mongoose.set('debug', true);
-mongoose.connect('mongodb://localhost/test');
+// mongoose.connect('mongodb://localhost/test');
+
+mongoose.connect('mongodb://senenkovitalik:iJFggFnXRUkhRPYv@todo-shard-00-00-0myio.mongodb.net:27017,todo-shard-00-01-0myio.mongodb.net:27017,todo-shard-00-02-0myio.mongodb.net:27017/test?ssl=true&replicaSet=Todo-shard-0&authSource=admin',
+  {useNewUrlParser: true}
+);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -26,7 +32,7 @@ app.use(morgan('dev'));
 app.set('views', process.cwd() + '/client/dist');
 app.set('view engine', 'pug');
 
-app.use(express.static(process.cwd()+'/client/dist/'));
+app.use(express.static(process.cwd() + '/client/dist/'));
 
 app.use(session({
   secret: 'vEry_$tr0ng-P@$$',
@@ -38,7 +44,7 @@ app.use(session({
 }));
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 
 const routes = require('./routes/router');
 app.use("/api", routes);
@@ -49,7 +55,7 @@ app.get(/^(?!\/api).+$/, (req, res) => {
 
   const content = ReactDOMServer.renderToString(
     <StaticRouter location={req.url} context={context}>
-      <App />
+      <AppContainer />
     </StaticRouter>
   );
 
@@ -59,7 +65,7 @@ app.get(/^(?!\/api).+$/, (req, res) => {
     });
     res.end();
   } else {
-    res.render('index', { content: content });
+    res.render('index', {content: content});
   }
 });
 
