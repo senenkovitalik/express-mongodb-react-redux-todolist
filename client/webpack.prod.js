@@ -52,9 +52,10 @@ module.exports = merge(common, {
       chunkFilename: '[id].css'
     }),
     new HtmlWebpackPlugin({
-        filename: 'index.pug',
-        template: './src/index.pug',
-        title: 'To Do List'
+      filename: 'index.pug',
+      template: './src/index.pug',
+      title: 'To Do List',
+      favicon: './src/favicon.ico',
     }),
     new HtmlWebpackPugPlugin(),
     new webpack.DefinePlugin({
