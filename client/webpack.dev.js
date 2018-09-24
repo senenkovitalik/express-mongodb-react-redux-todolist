@@ -31,6 +31,8 @@ module.exports = merge(common, {
     new HtmlWebpackPlugin({
       title: 'To Do',
       template: './src/index.html',
+      favicon: './src/favicon.ico',
+      cache: true
     })
   ]
 });
