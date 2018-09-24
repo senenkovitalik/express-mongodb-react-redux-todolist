@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const email_validator = require('email-validator');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const { TaskListSchema } = require('./TaskList');
 
