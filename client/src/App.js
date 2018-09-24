@@ -14,32 +14,28 @@ import { ListTasksContainer } from "./content/tasks/ListTasksContainer";
 import Task from "./content/task/Task";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {LOGGED} from "./constants";
+import { isNode } from './utils';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      logged: this.isNode().sessionStorage ? sessionStorage.getItem(LOGGED) : false
+      logged: isNode().sessionStorage ? sessionStorage.getItem(LOGGED) : false
     };
 
-    this.isNode = this.isNode.bind(this);
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
   }
 
-  isNode() {
-    return typeof process === 'object' && !!process.versions.node ? global : window;
-  }
-
   login() {
     this.setState({ logged: true });
-    this.isNode().sessionStorage.setItem(LOGGED, '1');
+    isNode().sessionStorage.setItem(LOGGED, '1');
   }
 
   logout() {
     this.setState({ logged: false });
-    this.isNode().sessionStorage.removeItem(LOGGED);
+    isNode().sessionStorage.removeItem(LOGGED);
   }
 
   render() {
