@@ -1,11 +1,10 @@
 import { connect } from 'react-redux';
-import { fetchLists } from '../../redux/actions';
-import ListTasks from './ListTasks';
+import Task from './Task';
+import {fetchLists} from "../../redux/actions";
 
 const mapStateToProps = state => {
   return {
-    lists: state.lists,
-    tasks: state.tasks
+    lists: state.lists
   }
 };
 
@@ -17,7 +16,7 @@ const mapDispatchToProps = dispatch => {
   }
 };
 
-export const ListTasksContainer = connect(
+export const TaskContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(ListTasks);
+)(Task);

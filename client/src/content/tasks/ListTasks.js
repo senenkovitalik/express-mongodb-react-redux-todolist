@@ -61,7 +61,7 @@ class ListTasks extends React.Component {
             {/*<TaskItem/>*/}
           </div>
 
-          <NewTaskButton/>
+          <NewTaskButton list={this.state.currentList} />
         </Col>
       </Row>
     );

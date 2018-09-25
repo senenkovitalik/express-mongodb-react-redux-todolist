@@ -11,10 +11,8 @@ import Login from './content/login/Login';
 import Signup from './content/signup/Signup';
 import { ListsContainer } from './content/lists/ListsContainer';
 import { ListTasksContainer } from "./content/tasks/ListTasksContainer";
-import Task from "./content/task/Task";
+import { TaskContainer } from "./content/task/TaskContainer";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {LOGGED} from "./constants";
-import { isNode } from './utils';
 
 class App extends React.Component {
   constructor(props) {
@@ -37,7 +35,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(`User is logged in: ${this.props.logged}`);
     return (
       <div>
         <Header history={this.props.history} logged={this.state.logged} logout={this.logout} />
@@ -53,9 +50,20 @@ class App extends React.Component {
                 login={this.login}
                 logged={this.state.logged} />}
           />
-          <Route path="/lists/:id" render={props => <ListTasksContainer {...props} />}/>
-          <Route path="/lists" render={props => <ListsContainer history={props.history} />} />
-          <Route path="/task" component={Task}/>
+          <Route exact path="/lists/:id" render={props => <ListTasksContainer {...props} />}/>
+          <Route exact path="/lists" render={props => <ListsContainer history={props.history} />} />
+
+          <Route
+            exact
+            path="/lists/:id/tasks"
+            render={props => <TaskContainer {...props} />}
+          />
+          <Route
+            exact
+            path="/lists/:id/tasks/:task_id"
+            render={props => <TaskContainer {...props} />}
+          />
+
           <Route path="*" render={() => <h1>404 Not Found</h1>} />
         </Switch>
 

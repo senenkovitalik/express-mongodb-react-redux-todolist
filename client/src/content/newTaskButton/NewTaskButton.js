@@ -1,17 +1,17 @@
 import React from 'react';
-import { Button } from 'reactstrap';
+import {Button} from 'reactstrap';
+import {Link} from 'react-router-dom';
 import './NewTaskButton.css';
 
-class NewTaskButton extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <Button id="new-task-button" color="primary">+</Button>
-        );
-    }
-}
+const NewTaskButton = ({ list }) => {
+  return (
+    <Button
+      tag={Link}
+      to={`/lists/${list}/tasks`}
+      id="new-task-button"
+      color="primary"
+    >+</Button>
+  );
+};
 
 export default NewTaskButton;
