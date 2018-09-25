@@ -58,10 +58,23 @@ UserSchema.pre('update', function(next) {
 UserSchema.pre('save', function(next) {
   const user = this;
 
-  bcrypt.hash(user.password, 10).then(hash => {
-    user.password = hash;
-    next();
-  }).catch(err => next(err));
+  /*
+  Hash user password ONLY when new user instance will be created.
+  In other cases call next();
+   */
+  User.findOne({ email: user.email })
+    .exec()
+    .then(saved_user => {
+      if (saved_user) {
+        next();
+      } else {
+        bcrypt.hash(user.password, 10).then(hash => {
+          user.password = hash;
+          next();
+        }).catch(err => next(err));
+      }
+    })
+    .catch(err => next(err));
 });
 
 UserSchema.statics.authenticate = (email, password, callback) => {
