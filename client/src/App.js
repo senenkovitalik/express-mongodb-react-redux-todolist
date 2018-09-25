@@ -21,7 +21,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      logged: isNode().sessionStorage ? sessionStorage.getItem(LOGGED) : false
+      logged: this.props.logged
     };
 
     this.login = this.login.bind(this);
@@ -30,15 +30,14 @@ class App extends React.Component {
 
   login() {
     this.setState({ logged: true });
-    isNode().sessionStorage.setItem(LOGGED, '1');
   }
 
   logout() {
     this.setState({ logged: false });
-    isNode().sessionStorage.removeItem(LOGGED);
   }
 
   render() {
+    console.log(`User is logged in: ${this.props.logged}`);
     return (
       <div>
         <Header history={this.props.history} logged={this.state.logged} logout={this.logout} />

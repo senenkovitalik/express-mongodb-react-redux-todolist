@@ -16,9 +16,9 @@ const store = createStore(
   )
 );
 
-export const AppContainer = () => {
+export const AppContainer = ({ logged }) => {
   return <Provider store={store}>
-            <App />
+            <App logged={logged} />
         </Provider>
 };
 

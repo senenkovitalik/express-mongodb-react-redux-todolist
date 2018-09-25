@@ -10,6 +10,7 @@ export function createFormData(values) {
   return data.join("&");
 }
 
+// todo remove in future
 export function isNode() {
   return typeof process === 'object' && !!process.versions.node ? global : window;
 }

@@ -62,7 +62,7 @@ app.get(/^(?!\/api).+$/, (req, res) => {
 
   const content = ReactDOMServer.renderToString(
     <StaticRouter location={req.url} context={context}>
-      <AppContainer/>
+      <AppContainer logged={!!req.session.user_id} />
     </StaticRouter>
   );
 
