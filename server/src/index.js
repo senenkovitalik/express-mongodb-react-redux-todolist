@@ -13,12 +13,16 @@ import {StaticRouter} from 'react-router';
 
 mongoose.set('debug', true);
 
+/*
+When we don't have locally installed MongoDB, we can use it online.
+ */
 if (process.env.LOCAL) {
+  mongoose.connect('mongodb://localhost/test');
+} else {
+  // todo move password to .env
   mongoose.connect('mongodb://senenkovitalik:iJFggFnXRUkhRPYv@todo-shard-00-00-0myio.mongodb.net:27017,todo-shard-00-01-0myio.mongodb.net:27017,todo-shard-00-02-0myio.mongodb.net:27017/test?ssl=true&replicaSet=Todo-shard-0&authSource=admin',
     {useNewUrlParser: true}
   );
-} else {
-  mongoose.connect('mongodb://localhost/test');
 }
 
 const db = mongoose.connection;
