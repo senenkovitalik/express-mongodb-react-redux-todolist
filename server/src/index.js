@@ -10,19 +10,21 @@ const MongoStore = require('connect-mongo')(session);
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import {StaticRouter} from 'react-router';
-// import App from '../../client/src/App';
 
 mongoose.set('debug', true);
-// mongoose.connect('mongodb://localhost/test');
 
-mongoose.connect('mongodb://senenkovitalik:iJFggFnXRUkhRPYv@todo-shard-00-00-0myio.mongodb.net:27017,todo-shard-00-01-0myio.mongodb.net:27017,todo-shard-00-02-0myio.mongodb.net:27017/test?ssl=true&replicaSet=Todo-shard-0&authSource=admin',
-  {useNewUrlParser: true}
-);
+if (process.env.LOCAL) {
+  mongoose.connect('mongodb://senenkovitalik:iJFggFnXRUkhRPYv@todo-shard-00-00-0myio.mongodb.net:27017,todo-shard-00-01-0myio.mongodb.net:27017,todo-shard-00-02-0myio.mongodb.net:27017/test?ssl=true&replicaSet=Todo-shard-0&authSource=admin',
+    {useNewUrlParser: true}
+  );
+} else {
+  mongoose.connect('mongodb://localhost/test');
+}
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-  console.log("Successfully connected to MongoDB");
+  console.log(`Successfully connected to ${process.env.LOCAL ? 'Local MongoDB' : 'MongoDB Atlas'}`);
 });
 
 const app = express();
@@ -35,7 +37,7 @@ app.set('view engine', 'pug');
 app.use(express.static(process.cwd() + '/client/dist/'));
 
 app.use(session({
-  cookie: { secure: false, maxAge: 86400 },
+  cookie: {secure: false, maxAge: 86400},
   secret: 'vEry_$tr0ng-P@$$',
   resave: true,
   saveUninitialized: true,
@@ -56,7 +58,7 @@ app.get(/^(?!\/api).+$/, (req, res) => {
 
   const content = ReactDOMServer.renderToString(
     <StaticRouter location={req.url} context={context}>
-      <AppContainer />
+      <AppContainer/>
     </StaticRouter>
   );
 
