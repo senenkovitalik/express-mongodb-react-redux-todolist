@@ -59,7 +59,7 @@
   "scripts": {
     "start": "node server/dist/index.js",
     "dev:server": "webpack --config server/webpack.dev.js --watch",
-    "dev:client": "webpack-dev-server --open --config client/webpack.dev.js",
+    "dev:client": "webpack-dev-server --color --open --config client/webpack.dev.js",
     "dev:both": "npm-run-all --parallel dev:server dev:client",
     "build:client": "webpack --config client/webpack.prod.js",
     "build:server": "webpack --config server/webpack.prod.js",
