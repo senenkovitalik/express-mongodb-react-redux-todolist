@@ -10,6 +10,12 @@ import {
   InputGroupText,
   Button
 } from 'reactstrap';
+import {
+  AvForm,
+  AvGroup,
+  AvInput,
+  AvFeedback
+} from 'availity-reactstrap-validation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCalendarAlt,
@@ -24,27 +30,43 @@ export default class Task extends Component {
     super(props);
 
     this.state = {
-      name: '',
-      done: false,
-      date: '',
-      time: ''
+      title: '',
+      completed: false,
+      dueDate: '',
+      dueTime: ''
     };
+
+    this.formRef = React.createRef();
 
     this.handleChange = this.handleChange.bind(this);
     this.clearValue = this.clearValue.bind(this);
+    this.handleValidSubmit = this.handleValidSubmit.bind(this);
   }
 
+  handleValidSubmit() {
+    if (this.state.completed) {
+      /*
+      complete task
+      PATCH /api/lists/:listID/tasks/:taskID/trigger
+      */
+    } else {
+      // create new task
+      this.props.createTask(this.props.match.params.id, this.state.title);
+    }
+  }
+
+  // todo process all data by availity-reactstrap-validation
   handleChange(e) {
     const { name, value, checked } = e.target;
 
     switch (name) {
-      case "name":
-      case "date":
-      case "time":
+      case "title":
+      case "dueDate":
+      case "dueTime":
         this.setState({ [name]: value });
         break;
-      case "done":
-        this.setState({ done: checked });
+      case "completed":
+        this.setState({ completed: checked });
         break;
     }
   }
@@ -59,35 +81,36 @@ export default class Task extends Component {
   }
 
   render() {
-    const minDate = new Date().toISOString().substring(0, 10);
-
     return (
       <Container>
       <Row className="justify-content-center">
         <Col lg="7">
-          <Form>
-            {/*{<!-- Name -->}*/}
-            <div className="mt-2">
+          <AvForm onValidSubmit={this.handleValidSubmit}>
+            {/*{<!-- Title -->}*/}
+            <AvGroup className="mt-2 mb-0">
               <label htmlFor="name"><strong>What need to done?</strong></label>
-              <input
-                className="form-control"
-                id="name"
-                name="name"
+              <AvInput
+                required
+                validate={{ minLength: { value: 3 }, maxLength: { value: 25 }}}
+                id="title"
+                name="title"
                 placeholder="Task #1"
                 onChange={this.handleChange}
                 value={this.state.value}
               />
-            </div>
+              <AvFeedback>Please, fill  this field.</AvFeedback>
+            </AvGroup>
 
-            {/*{<!-- Done -->}*/}
+            {/*{<!-- Completed -->}*/}
             <div className="form-check">
               <label>
                 <input
                   type="checkbox"
                   className="form-check-input"
-                  name="done"
+                  name="completed"
                   checked={this.state.done}
                   onChange={this.handleChange}
+                  disabled={!this.props.match.params.task_id}
                 />
                   <small>Are task is done?</small>
               </label>
@@ -102,10 +125,10 @@ export default class Task extends Component {
                 <InputGroup>
                   <input
                     type="date"
-                    name="date"
-                    min={minDate}
+                    name="dueDate"
+                    min={new Date().toISOString().substring(0, 10)}
                     className="form-control"
-                    value={this.state.date}
+                    value={this.state.dueDate}
                     onChange={this.handleChange}
                   />
                   <div className="input-group-append">
@@ -132,9 +155,9 @@ export default class Task extends Component {
                 <InputGroup>
                   <input
                     type="time"
-                    name="time"
+                    name="dueTime"
                     className="form-control"
-                    value={this.state.time}
+                    value={this.state.dueTime}
                     onChange={this.handleChange}
                   />
                   <div className="input-group-append">
@@ -208,9 +231,12 @@ export default class Task extends Component {
               {
                 this.props.match.params.task_id && <Button color="danger" className="mr-1">Remove</Button>
               }
-              <Button color="success" onClick={() => console.log(this.state)}>Save</Button>
+              <Button
+                color="success"
+                // onClick={() => console.log(this.state)}
+              >Save</Button>
             </div>
-          </Form>
+          </AvForm>
         </Col>
       </Row>
       </Container>

@@ -103,6 +103,7 @@ function tasks(state = {}, action) {
       return newState;
     }
     case ADD_TASK:
+
       break;
     default:
       return state;
