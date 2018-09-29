@@ -10,6 +10,7 @@ import {
   Button
 } from "reactstrap";
 import {NavLink as nav} from 'react-router-dom';
+import MenuItem from "./MenuItem";
 
 class Header extends React.Component {
   constructor(props) {
@@ -45,24 +46,12 @@ class Header extends React.Component {
         <NavbarToggler onClick={this.toggleNavbar}/>
         <Collapse isOpen={!this.state.collapsed} navbar>
           <Nav className="ml-auto" navbar>
-            <NavItem>
-              <NavLink tag={nav} to="/">Home</NavLink>
-            </NavItem>
+            <MenuItem to="/" title='Home' onClickAction={this.toggleNavbar} />
             {
               this.props.logged &&
-              <NavItem>
-                <NavLink tag={nav} to="/lists">Lists</NavLink>
-              </NavItem>
+              <MenuItem to="/lists" title='Lists' onClickAction={this.toggleNavbar} />
             }
-            {
-              this.props.logged &&
-              <NavItem>
-                <NavLink tag={nav} to="/task">Task</NavLink>
-              </NavItem>
-            }
-            <NavItem>
-              <NavLink tag={nav} to="/about_us">About us</NavLink>
-            </NavItem>
+            <MenuItem to="/about_us" title='About us' onClickAction={this.toggleNavbar} />
             <div className="form-inline">
               {
                 !this.props.logged &&
