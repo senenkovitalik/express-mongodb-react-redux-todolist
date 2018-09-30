@@ -4,7 +4,7 @@ import {
   Route
 } from 'react-router-dom';
 import {withRouter} from 'react-router';
-import Header from "./Header";
+import Header from "./header/Header";
 import Footer from "./Footer";
 import Home from './content/home/Home';
 import Login from './content/login/Login';
