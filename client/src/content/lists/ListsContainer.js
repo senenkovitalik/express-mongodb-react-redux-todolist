@@ -4,7 +4,8 @@ import Lists from './Lists';
 
 const mapStateToProps = state => {
   return {
-    lists: state.lists
+    lists: state.lists,
+    tasks: state.tasks
   }
 };
 

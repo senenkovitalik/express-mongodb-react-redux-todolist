@@ -22,7 +22,7 @@ export default class ListItem extends Component {
   render() {
     return (
       <Card className="task w-100"
-            onClick={() => this.props.history.push(`/lists/${this.props.list.id}`)}>
+            onClick={() => this.props.history.push(`/lists/${this.props.list._id}`)}>
         <CardBody>
           <div className="form-check">
             <div className="d-flex flex-row justify-content-between">
@@ -33,18 +33,18 @@ export default class ListItem extends Component {
               <div>
                 <Button onClick={this.togglePopover}
                         color='danger'
-                        id={`id_${this.props.list.id}`}>
+                        id={`id_${this.props.list._id}`}>
                   <FontAwesomeIcon icon={faTrashAlt} />
                 </Button>
                 <Popover placement="left"
                          isOpen={this.state.popoverOpen}
                          toggle={this.togglePopover}
-                         target={`id_${this.props.list.id}`}>
+                         target={`id_${this.props.list._id}`}>
                   <PopoverHeader>Are you really want to delete this list?</PopoverHeader>
                   <PopoverBody className="d-flex justify-content-center">
                     <Button color="danger"
                             className="mr-1"
-                            onClick={() => this.props.deleteList(this.props.list.id)}
+                            onClick={() => this.props.deleteList(this.props.list._id)}
                     >Delete</Button>
                     <Button color="primary"
                             className="ml-1"

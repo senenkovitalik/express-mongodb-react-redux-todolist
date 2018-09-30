@@ -28,7 +28,7 @@ class ListsDropdown extends React.Component {
           >
             {
               Object.values(this.props.lists)
-                .map(l => <option key={l.id} value={l.id}>{l.title}</option>)
+                .map(l => <option key={l._id} value={l._id}>{l.title}</option>)
             }
           </Input>
         </Col>

@@ -31,7 +31,6 @@ export default class Lists extends Component {
 
     for (const list_id in lists) {
       if (lists.hasOwnProperty(list_id)) {
-        console.log(lists[list_id]);
         listArr.push(lists[list_id]);
       }
     }
