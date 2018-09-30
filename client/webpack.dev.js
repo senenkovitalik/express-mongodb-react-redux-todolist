@@ -13,6 +13,9 @@ module.exports = merge(common, {
       '/api': 'http://localhost:3000'
     }
   },
+  watchOptions: {
+    ignored: /node_modules/
+  },
   module: {
     rules: [
       {
