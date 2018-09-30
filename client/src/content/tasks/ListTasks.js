@@ -44,36 +44,25 @@ class ListTasks extends React.Component {
           <hr/>
 
           <div className="mb-3">
-            Current list: {this.state.currentList}
 
-            {/*<div className="section-name text-primary font-weight-bold">Tomorrow</div>*/}
-            {/*<TaskItem/>*/}
-            {/*<TaskItem/>*/}
-            {/*<TaskItem/>*/}
-            {/*<div className="section-name text-primary font-weight-bold">Next week</div>*/}
-            {/*<TaskItem/>*/}
-            {/*<TaskItem/>*/}
-            {/*<div className="section-name text-primary font-weight-bold">Next month</div>*/}
-            {/*<TaskItem/>*/}
-            {/*<div className="section-name text-primary font-weight-bold">Later</div>*/}
-            {/*<TaskItem/>*/}
-            {/*<TaskItem/>*/}
-            {/*<TaskItem/>*/}
+            {
+              Object.values(this.props.tasks).map(
+                task => <TaskItem key={task._id} task={task} />
+              )
+            }
+
+            <div className="section-name text-danger font-weight-bold">Missed</div>
+            <div className="section-name text-primary font-weight-bold">Today</div>
+            <div className="section-name text-primary font-weight-bold">Tomorrow</div>
+            <div className="section-name text-primary font-weight-bold">Next week</div>
+            <div className="section-name text-primary font-weight-bold">Next month</div>
+            <div className="section-name text-primary font-weight-bold">Later</div>
           </div>
 
           <NewTaskButton list={this.state.currentList} />
         </Col>
       </Row>
     );
-  }
-
-  componentDidMount() {
-    /*
-    If store doesn't contain lists, fetch them.
-     */
-    if (!Object.keys(this.props.lists).length) {
-      this.props.fetchLists();
-    }
   }
 }
 
