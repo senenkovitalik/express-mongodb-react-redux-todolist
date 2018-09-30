@@ -50,16 +50,14 @@ function lists(state = {}, action) {
         if (lists.hasOwnProperty(id)) {
           let list = lists[id];
 
-          // todo change id->_id, use object rest spread
+          const { _id, tasks, ...rest } = list;
           newState = Object.assign({}, newState, {
-            [list._id]: {
-              id: list._id,
-              title: list.title,
-              tasks: list.tasks.map(t => t._id),
-              created_at: list.created_at,
-              modified_at: list.modified_at
+            [_id]: {
+              _id,
+              tasks: tasks.map(t => t._id),
+              ...rest
             }
-          })
+          });
         }
       }
       return newState;
@@ -100,8 +98,10 @@ function tasks(state = {}, action) {
     case GET_LISTS: {
       const newState = {};
 
+      console.log(action);
+
       action.lists.forEach(l => {
-        l.tasks.forEach(t => Object.assign({}, newState, {
+        l.tasks.forEach(t => Object.assign(newState, {
           [t._id]: t
         }));
       });
