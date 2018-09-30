@@ -98,8 +98,6 @@ function tasks(state = {}, action) {
     case GET_LISTS: {
       const newState = {};
 
-      console.log(action);
-
       action.lists.forEach(l => {
         l.tasks.forEach(t => Object.assign(newState, {
           [t._id]: t
