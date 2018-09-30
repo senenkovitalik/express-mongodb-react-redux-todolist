@@ -1,3 +1,5 @@
+import {createFormData} from "../utils";
+
 export const ADD_TASK = 'ADD_TASK';
 export const TOGGLE_TASK = 'TOGGLE_TASK';
 export const REMOVE_TASK = 'REMOVE_TASK';
@@ -21,10 +23,17 @@ export const VisibilityFilter = {
   Task
  */
 
-export function createTask(listID, title) {
+export function createTask(listID, task) {
+  console.log("Task", task);
   return dispatch =>
-    fetch(`/api/lists/${listID}/tasks/${title}`, { method: 'POST' })
-      .then(res => res.ok && res.status === 200
+    fetch(`/api/lists/${listID}/tasks/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+      },
+      body: createFormData(task)
+    })
+      .then(res => res.ok && res.status === 201
         ? res.json()
         : null
       )

@@ -24,11 +24,11 @@ taskRouter.get('/', findUser, (req, res) => {
 });
 
 // get task by ID
-taskRouter.get('/:taskID', findUser, (req, res) => {
+taskRouter.get('/:task_id', findUser, (req, res) => {
   const { user } = req;
-  const { listID, taskID } = req.params;
+  const { list_id, task_id } = req.params;
 
-  const task = user.task_lists.id(listID).tasks.id(taskID);
+  const task = user.task_lists.id(list_id).tasks.id(task_id);
 
   if (task) {
     res.status(200).json(task);
@@ -38,26 +38,28 @@ taskRouter.get('/:taskID', findUser, (req, res) => {
 });
 
 // create task
-taskRouter.post('/:title', findUser, (req, res) => {
-  const { listID, title } = req.params;
+taskRouter.post('/', findUser, (req, res) => {
+  const { list_id } = req.params;
+  const { title, completed, dueDate, dueTime } = req.body;
   const { user } = req;
 
-  const list = user.task_lists.id(listID);
-  const task = list.tasks.create({ title });
-  const taskID = task._id;
+  const list = user.task_lists.id(list_id);
+  const task = list.tasks.create({ title, completed });
+  const task_id = task._id;
 
   list.tasks.push(task);
 
   user.save()
     .then(() => {
-      res.location(`/api/lists/${listID}/tasks/${taskID}`);
-      res.status(201).end();
+      res.location(`/api/lists/${list_id}/tasks/${task_id}`);
+      res.status(201);
+      res.json(Object.assign({}, task._doc, { list_id }));
     })
     .catch(err => handleMongooseError(err, res));
 });
 
 // change task status
-taskRouter.patch('/:taskID/trigger', findUser, (req, res) => {
+taskRouter.patch('/:task_id/trigger', findUser, (req, res) => {
   const { user, params: { listID, taskID } } = req;
 
   const list = user.task_lists.id(listID);
@@ -74,7 +76,7 @@ taskRouter.patch('/:taskID/trigger', findUser, (req, res) => {
     .catch(err => handleMongooseError(err, res));
 });
 
-taskRouter.patch('/:taskID/:title', findUser, (req, res) => {
+taskRouter.patch('/:task_id/:title', findUser, (req, res) => {
   const { user, params: { listID, taskID, title } } = req;
 
   const list = user.task_lists.id(listID);
@@ -90,7 +92,7 @@ taskRouter.patch('/:taskID/:title', findUser, (req, res) => {
 });
 
 // delete task
-taskRouter.delete('/:taskID', findUser, (req, res) => {
+taskRouter.delete('/:task_id', findUser, (req, res) => {
   const { user } = req;
   const { listID, taskID } = req.params;
 

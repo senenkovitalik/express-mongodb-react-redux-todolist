@@ -36,8 +36,6 @@ export default class Task extends Component {
       dueTime: ''
     };
 
-    this.formRef = React.createRef();
-
     this.handleChange = this.handleChange.bind(this);
     this.clearValue = this.clearValue.bind(this);
     this.handleValidSubmit = this.handleValidSubmit.bind(this);
@@ -51,7 +49,7 @@ export default class Task extends Component {
       */
     } else {
       // create new task
-      this.props.createTask(this.props.match.params.id, this.state.title);
+      this.props.createTask(this.props.match.params.id, this.state);
     }
   }
 

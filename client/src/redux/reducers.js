@@ -50,6 +50,7 @@ function lists(state = {}, action) {
         if (lists.hasOwnProperty(id)) {
           let list = lists[id];
 
+          // todo change id->_id, use object rest spread
           newState = Object.assign({}, newState, {
             [list._id]: {
               id: list._id,
@@ -81,6 +82,11 @@ function lists(state = {}, action) {
       // also we need to remove tasks
       return newState;
     }
+    case ADD_TASK:
+      const list = state[action.task.list_id];
+      return Object.assign({}, list, {
+        tasks: [action.task._id, ...list.tasks]
+      });
     /*
      * for other actions
      */
@@ -103,8 +109,10 @@ function tasks(state = {}, action) {
       return newState;
     }
     case ADD_TASK:
-
-      break;
+      const { list_it, ...task } = action.task;
+      return Object.assign({}, state, {
+        [action.task._id]: task
+      });
     default:
       return state;
   }
