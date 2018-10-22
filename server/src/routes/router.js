@@ -59,6 +59,7 @@ router.get('/check', (req, res) => {
         res.status(500).end();
       } else {
         if (doc) {
+          console.log(doc);
           res.status(409).end();
         } else {
           res.status(200).end();
