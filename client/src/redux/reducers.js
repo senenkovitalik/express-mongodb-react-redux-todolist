@@ -66,7 +66,7 @@ function lists(state = {}, action) {
       const {list} = action;
       return Object.assign({}, state, {
         [list._id]: {
-          id: list._id,
+          _id: list._id,
           title: list.title,
           tasks: list.tasks, // there will be empty array, do nothing
           created_at: list.created_at,
