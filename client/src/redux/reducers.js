@@ -82,9 +82,11 @@ function lists(state = {}, action) {
     }
     case ADD_TASK:
       const list = state[action.task.list_id];
-      return Object.assign({}, list, {
+      const updatedList = Object.assign({}, list, {
         tasks: [action.task._id, ...list.tasks]
       });
+
+      return Object.assign({}, state, { [list._id]: updatedList });
     /*
      * for other actions
      */
@@ -107,7 +109,7 @@ function tasks(state = {}, action) {
       return newState;
     }
     case ADD_TASK:
-      const { list_it, ...task } = action.task;
+      const { list_id, ...task } = action.task;
       return Object.assign({}, state, {
         [action.task._id]: task
       });
