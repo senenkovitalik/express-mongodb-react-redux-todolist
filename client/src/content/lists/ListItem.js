@@ -15,7 +15,8 @@ export default class ListItem extends Component {
   }
 
 
-  togglePopover() {
+  togglePopover(e) {
+    e.stopPropagation();
     this.setState({ popoverOpen: !this.state.popoverOpen });
   }
 
