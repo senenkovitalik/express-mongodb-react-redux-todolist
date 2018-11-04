@@ -40,11 +40,11 @@ taskRouter.get('/:task_id', findUser, (req, res) => {
 // create task
 taskRouter.post('/', findUser, (req, res) => {
   const { list_id } = req.params;
-  const { title, completed, dueDate, dueTime } = req.body;
+  const { title, completed, dueDate } = req.body;
   const { user } = req;
 
   const list = user.task_lists.id(list_id);
-  const task = list.tasks.create({ title, completed });
+  const task = list.tasks.create({ title, completed, dueDate });
   const task_id = task._id;
 
   list.tasks.push(task);

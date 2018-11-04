@@ -19,8 +19,14 @@ const TaskSchema = mongoose.Schema({
   modified_at: {
     type: Date,
     default: Date.now
+  },
+  dueDate: {
+    type: Date,
+    default: null
   }
 });
+
+// todo add timestamp to schema https://mongoosejs.com/docs/guide.html#timestamps
 
 const Task = mongoose.model('Task', TaskSchema);
 

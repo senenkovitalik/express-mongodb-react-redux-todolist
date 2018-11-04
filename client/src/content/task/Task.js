@@ -32,8 +32,8 @@ export default class Task extends Component {
     this.state = {
       title: '',
       completed: false,
-      dueDate: '',
-      dueTime: ''
+      date: '',
+      time: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -49,7 +49,14 @@ export default class Task extends Component {
       */
     } else {
       // create new task
-      this.props.createTask(this.props.match.params.id, this.state);
+      const dateString = `${this.state.date}T${this.state.time}:00`;
+      const dueDate = new Date(dateString);
+
+      const { title, completed } = this.state;
+
+      this.props.createTask(this.props.match.params.id, {
+        title, completed, dueDate
+      });
     }
   }
 
@@ -59,8 +66,8 @@ export default class Task extends Component {
 
     switch (name) {
       case "title":
-      case "dueDate":
-      case "dueTime":
+      case "date":
+      case "time":
         this.setState({ [name]: value });
         break;
       case "completed":
@@ -70,12 +77,7 @@ export default class Task extends Component {
   }
 
   clearValue(name) {
-    switch (name) {
-      case "date":
-      case "time":
-        this.setState({ [name]: '' });
-        break;
-    }
+    this.setState({ [name]: '' });
   }
 
   render() {
@@ -123,10 +125,10 @@ export default class Task extends Component {
                 <InputGroup>
                   <input
                     type="date"
-                    name="dueDate"
+                    name="date"
                     min={new Date().toISOString().substring(0, 10)}
                     className="form-control"
-                    value={this.state.dueDate}
+                    value={this.state.date}
                     onChange={this.handleChange}
                   />
                   <div className="input-group-append">
@@ -153,10 +155,11 @@ export default class Task extends Component {
                 <InputGroup>
                   <input
                     type="time"
-                    name="dueTime"
+                    name="time"
                     className="form-control"
-                    value={this.state.dueTime}
+                    value={this.state.time}
                     onChange={this.handleChange}
+                    disabled={!this.state.date}
                   />
                   <div className="input-group-append">
                     <InputGroupText>
@@ -208,7 +211,7 @@ export default class Task extends Component {
                 >
                   {
                     Object.values(this.props.lists).map(
-                      l => <option key={l.id} value={l.id}>{l.title}</option>
+                      l => <option key={l._id} value={l._id}>{l.title}</option>
                     )
                   }
                 </Input>
