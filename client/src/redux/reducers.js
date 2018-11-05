@@ -75,9 +75,10 @@ function lists(state = {}, action) {
       });
     }
     case REMOVE_LIST: {
+      action.tasks = state[action.id].tasks;
       const newState = Object.assign({}, state);
       delete newState[action.id];
-      // also we need to remove tasks
+
       return newState;
     }
     case ADD_TASK:
@@ -108,11 +109,23 @@ function tasks(state = {}, action) {
 
       return newState;
     }
-    case ADD_TASK:
+    case ADD_TASK: {
       const { list_id, ...task } = action.task;
       return Object.assign({}, state, {
         [action.task._id]: task
       });
+    }
+    case REMOVE_LIST: {
+      /*
+      We set this value 'action.tasks' at REMOVE_LIST lists reducer
+       */
+      const tasksToDelete = action.tasks;
+      const nextState = Object.assign({}, state);
+
+      tasksToDelete.map(task_id => delete nextState[task_id]);
+
+      return nextState;
+    }
     default:
       return state;
   }
