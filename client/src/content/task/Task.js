@@ -49,14 +49,25 @@ export default class Task extends Component {
       */
     } else {
       // create new task
-      const dateString = `${this.state.date}T${this.state.time}:00`;
-      const dueDate = new Date(dateString);
+      const dateString = this.state.date !== '' ? this.state.date : null;
+      const timeString = this.state.time !== '' ? this.state.time : null;
+
+      let dueDate = null;
+
+      if (dateString && timeString) {
+        dueDate = new Date(`${dateString}T${timeString}:00`);
+      } else if (dateString && !timeString) {
+        dueDate = new Date(`${dateString}T00:00:00`);
+      }
 
       const { title, completed } = this.state;
 
       this.props.createTask(this.props.match.params.id, {
         title, completed, dueDate
       });
+
+      // todo get dispatch callback AND THEN call line below
+      this.props.history.push(`/lists/${this.props.match.params.id}`);
     }
   }
 
@@ -232,10 +243,7 @@ export default class Task extends Component {
               {
                 this.props.match.params.task_id && <Button color="danger" className="mr-1">Remove</Button>
               }
-              <Button
-                color="success"
-                // onClick={() => console.log(this.state)}
-              >Save</Button>
+              <Button color="success">Save</Button>
             </div>
           </AvForm>
         </Col>
@@ -244,12 +252,12 @@ export default class Task extends Component {
     );
   }
 
-  componentDidMount() {
-    /*
-    If store doesn't contain lists, fetch them.
-     */
-    if (!Object.keys(this.props.lists).length) {
-      this.props.fetchLists();
-    }
-  }
+  // componentDidMount() {
+  //   /*
+  //   If store doesn't contain lists, fetch them.
+  //    */
+  //   if (!Object.keys(this.props.lists).length) {
+  //     this.props.fetchLists();
+  //   }
+  // }
 }
