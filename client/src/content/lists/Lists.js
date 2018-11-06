@@ -26,14 +26,13 @@ export default class Lists extends Component {
   }
 
   render() {
-    const { lists } = this.props;
-    const listArr = [];
 
-    for (const list_id in lists) {
-      if (lists.hasOwnProperty(list_id)) {
-        listArr.push(lists[list_id]);
-      }
-    }
+    const arr = Object.keys(this.props.lists).map(listID =>
+      <ListItem key={listID}
+                list={this.props.lists[listID]}
+                deleteList={this.props.deleteList}
+                history={this.props.history} />
+    );
 
     return (
       <Container>
@@ -51,14 +50,11 @@ export default class Lists extends Component {
             </AvForm>
             <hr/>
             {
-              !!listArr.length && <p>Available lists</p>
+              !!arr.length && <p>Available lists</p>
             }
             {
-              !!listArr.length
-                ? listArr.map(l => <ListItem key={l._id}
-                                             list={l}
-                                             deleteList={this.props.deleteList}
-                                             history={this.props.history}/>)
+              !!arr.length
+                ? arr
                 : <p>You don't have lists yet)</p>
             }
           </Col>
