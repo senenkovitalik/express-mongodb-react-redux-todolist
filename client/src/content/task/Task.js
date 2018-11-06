@@ -55,9 +55,9 @@ export default class Task extends Component {
       let dueDate = null;
 
       if (dateString && timeString) {
-        dueDate = new Date(`${dateString}T${timeString}:00`);
+        dueDate = new Date(`${dateString}T${timeString}:00`).toISOString();
       } else if (dateString && !timeString) {
-        dueDate = new Date(`${dateString}T00:00:00`);
+        dueDate = new Date(`${dateString}T00:00:00`).toISOString();
       }
 
       const { title, completed } = this.state;
@@ -67,7 +67,7 @@ export default class Task extends Component {
       });
 
       // todo get dispatch callback AND THEN call line below
-      this.props.history.push(`/lists/${this.props.match.params.id}`);
+      // this.props.history.push(`/lists/${this.props.match.params.id}`);
     }
   }
 
