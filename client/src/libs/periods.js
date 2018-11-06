@@ -36,21 +36,23 @@ export const periods = (function() {
     this.start.setHours(0);
     this.start.setMinutes(0);
     this.start.setSeconds(0);
+    this.start.setMilliseconds(0);
     this.end.setHours(23);
     this.end.setMinutes(59);
     this.end.setSeconds(59);
+    this.end.setMilliseconds(999);
 
     return this;
-  }
+  };
 
   Period.prototype.print = function() {
     console.log(this.name);
     console.log(this.start instanceof Date ? this.start.toLocaleString() : null);
     console.log(this.start instanceof Date ? this.end.toLocaleString() : null);
     console.log("");
-  }
+  };
 
-  //  ########## Calendar ##########
+  //  ########## Periods ##########
 
   let now          = null;
   let monthes      = null;
@@ -263,12 +265,17 @@ export const periods = (function() {
   }
 
   function create(date) {
-    if (now === null) {
-      now = new Date(date);
-      monthes = _computeMonthes(date);
-    } else {
-      console.log("Calendar already created.");
+
+    if (now !== null) {
+      console.log("Periods already created.");
+      return;
     }
+
+    now = date === undefined
+      ? new Date()
+      : new Date(date);
+
+    monthes = _computeMonthes(now);
   }
 
   function computePeriods() {
