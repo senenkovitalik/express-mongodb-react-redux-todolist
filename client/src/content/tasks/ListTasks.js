@@ -1,4 +1,5 @@
 import React from 'react';
+import { periods } from '../../libs/periods';
 import {
   Row,
   Col
@@ -28,6 +29,12 @@ class ListTasks extends React.Component {
   }
 
   render() {
+
+    const current_list = this.props.lists[this.state.currentList];
+    const current_tasks = current_list.hasOwnProperty('tasks')
+      ? Object.values(this.props.tasks).filter(task => current_list.tasks.includes(task._id))
+      : [];
+
     return (
       <Row noGutters className="justify-content-center">
         <Col xs="10">
@@ -46,11 +53,10 @@ class ListTasks extends React.Component {
           <div className="mb-3">
 
             {
-              Object.values(this.props.tasks).map(
-                task => <TaskItem key={task._id} task={task} />
-              )
+              current_tasks.map(task => <TaskItem key={task._id} task={task} />)
             }
 
+            {/*// todo filter tasks by date*/}
             <div className="section-name text-danger font-weight-bold">Missed</div>
             <div className="section-name text-primary font-weight-bold">Today</div>
             <div className="section-name text-primary font-weight-bold">Tomorrow</div>
