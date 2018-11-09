@@ -6,7 +6,7 @@ import {
 } from 'reactstrap';
 import './task-item.css';
 
-const TaskItem = ({ task }) => {
+const TaskItem = ({ task, missed }) => {
   return (
     <Card className="task w-100">
       <CardBody>
@@ -15,7 +15,9 @@ const TaskItem = ({ task }) => {
           <label className="mb-0">
             <span className="d-flex flex-column task-description">
               <span>{ task.title }</span>
-              <span className="text-dark"><small>Due date</small></span>
+              <span className={missed ? "text-danger" : "text-dark"}>
+                <small>{task.dueDate !== 'null' ? new Date(task.dueDate).toLocaleString() : null}</small>
+              </span>
             </span>
           </label>
         </div>

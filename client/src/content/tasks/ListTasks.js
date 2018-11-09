@@ -124,7 +124,7 @@ class ListTasks extends React.Component {
       e.tasks.length > 0
         ? <React.Fragment key={i}>
             <div key={i} className={`section-name ${e.name === 'Missed' ? 'text-danger' : 'text-primary'} font-weight-bold`}>{e.name}</div>
-            { e.tasks.map(task => <TaskItem key={task._id} task={task} />) }
+            { e.tasks.map(task => <TaskItem key={task._id} task={task} missed={e.name === 'Missed'} />) }
           </React.Fragment>
         : null
     );
