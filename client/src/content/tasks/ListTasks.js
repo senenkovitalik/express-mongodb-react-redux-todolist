@@ -17,11 +17,11 @@ class ListTasks extends React.Component {
 
     this.state = {
       currentList: this.props.match.params.id,
-      filter: 'SHOW_ACTIVE',
     };
 
     this.setCurrentList = this.setCurrentList.bind(this);
     this.filterByDate = this.filterByDate.bind(this);
+    this.createTasksObject = this.createTasksObject.bind(this);
   }
 
   setCurrentList(id) {
@@ -58,16 +58,8 @@ class ListTasks extends React.Component {
     });
   }
 
-  render() {
-
-    const current_list = this.props.lists[this.state.currentList]
-      ? this.props.lists[this.state.currentList]
-      : [];
-
-    const current_tasks = current_list.hasOwnProperty('tasks')
-      ? Object.values(this.props.tasks).filter(task => current_list.tasks.includes(task._id))
-      : [];
-
+  // todo Bad name. Find better.
+  createTasksObject(tasks) {
     periods.create(new Date());
     const ps = periods.computePeriods();
     const p = {
@@ -109,24 +101,38 @@ class ListTasks extends React.Component {
       },
     };
 
-    p['0'].tasks = this.filterByDate(ps, current_tasks, 'missed');
-    p["1"].tasks = this.filterByDate(ps, current_tasks, 'today');
-    p["2"].tasks = this.filterByDate(ps, current_tasks, 'tomorrow');
-    p["3"].tasks = this.filterByDate(ps, current_tasks, 'end_of_week');
-    p["4"].tasks = this.filterByDate(ps, current_tasks, 'next_week');
-    p["5"].tasks = this.filterByDate(ps, current_tasks, 'end_of_month');
-    p["6"].tasks = this.filterByDate(ps, current_tasks, 'next_week');
-    p["7"].tasks = this.filterByDate(ps, current_tasks, 'later');
+    p['0'].tasks = this.filterByDate(ps, tasks, 'missed');
+    p["1"].tasks = this.filterByDate(ps, tasks, 'today');
+    p["2"].tasks = this.filterByDate(ps, tasks, 'tomorrow');
+    p["3"].tasks = this.filterByDate(ps, tasks, 'end_of_week');
+    p["4"].tasks = this.filterByDate(ps, tasks, 'next_week');
+    p["5"].tasks = this.filterByDate(ps, tasks, 'end_of_month');
+    p["6"].tasks = this.filterByDate(ps, tasks, 'next_week');
+    p["7"].tasks = this.filterByDate(ps, tasks, 'later');
     // Maybe I'll fix this. In future. Maybe)
-    p["8"].tasks = current_tasks.filter(t => t.dueDate === "null");
+    p["8"].tasks = tasks.filter(t => t.dueDate === "null");
 
-    const tasks_to_show = Object.values(p).map((e, i) =>
-      e.tasks.length > 0
-        ? <React.Fragment key={i}>
-            <div key={i} className={`section-name ${e.name === 'Missed' ? 'text-danger' : 'text-primary'} font-weight-bold`}>{e.name}</div>
-            { e.tasks.map(task => <TaskItem key={task._id} task={task} missed={e.name === 'Missed'} />) }
-          </React.Fragment>
-        : null
+    return p;
+  }
+
+  render() {
+
+    const current_list = this.props.lists[this.state.currentList]
+      ? this.props.lists[this.state.currentList]
+      : [];
+
+    const current_tasks = current_list.hasOwnProperty('tasks')
+      ? Object.values(this.props.tasks).filter(task => current_list.tasks.includes(task._id))
+      : [];
+
+    const tasks_to_show = Object.values(this.createTasksObject(current_tasks))
+      .map((e, i) =>
+        e.tasks.length > 0
+          ? <React.Fragment key={i}>
+              <div key={i} className={`section-name ${e.name === 'Missed' ? 'text-danger' : 'text-primary'} font-weight-bold`}>{e.name}</div>
+              { e.tasks.map(task => <TaskItem key={task._id} task={task} missed={e.name === 'Missed'} />) }
+            </React.Fragment>
+          : null
     );
 
     return (
@@ -138,7 +144,8 @@ class ListTasks extends React.Component {
               lists={this.props.lists}
               setCurrentList={this.setCurrentList}
             />
-            <Filter/>
+            <Filter setFilter={this.props.updateVisibilityFilter}
+                    list={current_list} />
             <GroupActions/>
           </div>
 

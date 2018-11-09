@@ -19,9 +19,7 @@ export const VisibilityFilter = {
   SHOW_ACTIVE: 'SHOW_ACTIVE'
 };
 
-/*
-  Task
- */
+// Task
 
 export function createTask(listID, task) {
   console.log("Task", task);
@@ -51,9 +49,7 @@ export function addTask(task) {
   }
 }
 
-/*
-  List
- */
+//  List
 
 export function setCurrentList(id) {
   return {
@@ -118,7 +114,23 @@ export function removeList(id) {
   }
 }
 
-/*
-  Visibility Filter
- */
+// Visibility Filter
+
+export function updateVisibilityFilter(list_id, filter) {
+  return dispatch =>
+    fetch(`/api/lists/${list_id}/visibility_filter/${filter}`, { method: 'PATCH' })
+      .then(res => res.ok && res.status === 204
+        ? dispatch(setVisibilityFilter(list_id, filter))
+        : null
+      )
+      .catch(err => console.error('An error occurred', err));
+}
+
+export function setVisibilityFilter(list_id, filter) {
+  return {
+    type: SET_VISIBILITY_FILTER,
+    list_id,
+    filter
+  }
+}
 

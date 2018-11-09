@@ -21,11 +21,13 @@ const store = {
       id: 0,
       title: 'List #1',
       tasks: [0, 2, 3, 4],
+      visibilityFilter: 'SHOW_ALL'
     },
     1: {
       id: 1,
       title: 'List #2',
       tasks: [1, 5],
+      visibilityFilter: 'SHOW_ALL'
     },
   },
   tasks: {
@@ -35,8 +37,7 @@ const store = {
     3: {id: 3, title: 'Task #3', completed: false},
     4: {id: 4, title: 'Task #4', completed: true},
     5: {id: 5, title: 'Task #5', completed: false},
-  },
-  visibilityFilter: 'SHOW_ALL'
+  }
 };
 
 function lists(state = {}, action) {
@@ -88,9 +89,12 @@ function lists(state = {}, action) {
       });
 
       return Object.assign({}, state, { [list._id]: updatedList });
-    /*
-     * for other actions
-     */
+    case SET_VISIBILITY_FILTER:
+      const upList = Object.assign({}, state[action.list_id], {
+        visibility_filter: action.filter
+      });
+
+      return Object.assign({}, state, { [action.list_id]: upList });
     default:
       return state;
   }

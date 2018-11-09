@@ -1,18 +1,18 @@
 import { connect } from 'react-redux';
-import { fetchLists } from '../../redux/actions';
+import { updateVisibilityFilter } from '../../redux/actions';
 import ListTasks from './ListTasks';
 
 const mapStateToProps = state => {
   return {
     lists: state.lists,
-    tasks: state.tasks
+    tasks: state.tasks,
   }
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchLists: () => {
-      dispatch(fetchLists())
+    updateVisibilityFilter: (list_id, filter) => {
+      dispatch(updateVisibilityFilter(list_id, filter))
     }
   }
 };
