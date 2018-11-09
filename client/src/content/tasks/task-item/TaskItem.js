@@ -6,6 +6,7 @@ import {
 } from 'reactstrap';
 import './task-item.css';
 
+// todo change task status
 const TaskItem = ({ task, missed }) => {
   return (
     <Card className="task w-100">
