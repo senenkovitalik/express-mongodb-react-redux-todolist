@@ -10,6 +10,7 @@ import Filter from "../controls/Filter";
 import GroupActions from "../controls/GroupActions";
 import ListsDropdown from "../controls/ListsDropdown";
 import NewTaskButton from "../newTaskButton/NewTaskButton";
+import { VisibilityFilter } from '../../redux/actions';
 
 class ListTasks extends React.Component {
   constructor(props) {
@@ -128,6 +129,25 @@ class ListTasks extends React.Component {
       ? Object.values(this.props.tasks).filter(task => current_list.tasks.includes(task._id))
       : [];
 
+    const filter_func = task => {
+      const visibility_filter = current_list.hasOwnProperty('visibility_filter')
+        ? current_list.visibility_filter
+        : null;
+
+      if (!visibility_filter) {
+        return false;
+      }
+
+      switch (visibility_filter) {
+        case VisibilityFilter.SHOW_ACTIVE:
+          return !task.completed;
+        case VisibilityFilter.SHOW_COMPLETED:
+          return task.completed;
+        default:
+          return true;
+      }
+    };
+
     const tasks_to_show = Object.values(this.createTasksObject(current_tasks))
       .map((e, i) => {
           if (e.tasks.length > 0) {
@@ -135,16 +155,20 @@ class ListTasks extends React.Component {
             const missed = e.name === 'Missed' ? 'text-danger' : 'text-primary';
             const className = `section-name ${missed} font-weight-bold`;
 
-            return <React.Fragment key={i}>
-              <div key={i} className={className}>{e.name}</div>
-              {
-                e.tasks.map(task => <TaskItem key={task._id}
-                                             task={task}
-                                              list_id={current_list._id}
-                                             trigger={this.props.triggerTask}
-                                             missed={e.name === 'Missed'}/>)
-              }
-            </React.Fragment>
+            const filtered = e.tasks.filter(filter_func);
+
+            return filtered.length > 0
+              ? <React.Fragment key={i}>
+                <div key={i} className={className}>{e.name}</div>
+                {
+                  filtered.map(task => <TaskItem key={task._id}
+                                                 task={task}
+                                                 list_id={current_list._id}
+                                                 trigger={this.props.triggerTask}
+                                                 missed={e.name === 'Missed'}/>)
+                }
+              </React.Fragment>
+              : null;
           } else {
             return null;
           }
@@ -158,8 +182,7 @@ class ListTasks extends React.Component {
             <ListsDropdown
               current={this.state.currentList}
               lists={this.props.lists}
-              setCurrentList={this.setCurrentList}
-            />
+              setCurrentList={this.setCurrentList}/>
             <Filter setFilter={this.props.updateVisibilityFilter}
                     list={current_list}/>
             <GroupActions/>
@@ -168,10 +191,7 @@ class ListTasks extends React.Component {
           <hr/>
 
           <div className="mb-3">
-
-            // todo implement visibility filter
             {tasks_to_show}
-
           </div>
 
           <NewTaskButton list={this.state.currentList}/>
