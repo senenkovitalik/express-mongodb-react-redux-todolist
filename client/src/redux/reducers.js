@@ -119,6 +119,11 @@ function tasks(state = {}, action) {
         [action.task._id]: task
       });
     }
+    case TOGGLE_TASK: {
+      const oldTask = state[action.task_id];
+      const newTask = Object.assign({}, oldTask, { completed: !oldTask.completed });
+      return Object.assign({}, state, { [action.task_id]: newTask });
+    }
     case REMOVE_LIST: {
       /*
       We set this value 'action.tasks' at REMOVE_LIST lists reducer

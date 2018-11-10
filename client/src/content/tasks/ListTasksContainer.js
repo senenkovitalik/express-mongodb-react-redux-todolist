@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { updateVisibilityFilter } from '../../redux/actions';
+import { updateVisibilityFilter, triggerTask } from '../../redux/actions';
 import ListTasks from './ListTasks';
 
 const mapStateToProps = state => {
@@ -11,9 +11,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateVisibilityFilter: (list_id, filter) => {
+    triggerTask: (list_id, task_id) =>
+      dispatch(triggerTask(list_id, task_id)),
+    updateVisibilityFilter: (list_id, filter) =>
       dispatch(updateVisibilityFilter(list_id, filter))
-    }
   }
 };
 

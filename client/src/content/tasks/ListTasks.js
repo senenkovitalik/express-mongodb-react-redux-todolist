@@ -140,6 +140,7 @@ class ListTasks extends React.Component {
               {
                 e.tasks.map(task => <TaskItem key={task._id}
                                              task={task}
+                                              list_id={current_list._id}
                                              trigger={this.props.triggerTask}
                                              missed={e.name === 'Missed'}/>)
               }

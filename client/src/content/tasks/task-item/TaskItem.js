@@ -7,12 +7,15 @@ import {
 import './task-item.css';
 
 // todo change task status
-const TaskItem = ({ task, missed }) => {
+const TaskItem = ({ task, trigger, list_id, missed }) => {
   return (
     <Card className="task w-100">
       <CardBody>
         <div className="form-check">
-          <Input className="form-check-input" type="checkbox"/>
+          <Input className="form-check-input"
+                 type="checkbox"
+                 checked={task.completed}
+                 onChange={() => trigger(list_id, task._id)}/>
           <label className="mb-0">
             <span className="d-flex flex-column task-description">
               <span>{ task.title }</span>

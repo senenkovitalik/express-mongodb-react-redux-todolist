@@ -22,7 +22,6 @@ export const VisibilityFilter = {
 // Task
 
 export function createTask(listID, task) {
-  console.log("Task", task);
   return dispatch =>
     fetch(`/api/lists/${listID}/tasks/`, {
       method: 'POST',
@@ -36,7 +35,6 @@ export function createTask(listID, task) {
         : null
       )
       .then(json => {
-        console.log(json);
         dispatch(addTask(json))
       })
       .catch(err => console.log('An error occured', err));
@@ -46,6 +44,23 @@ export function addTask(task) {
   return {
     type: ADD_TASK,
     task
+  }
+}
+
+export function triggerTask(list_id, task_id) {
+  return dispatch =>
+    fetch(`/api/lists/${list_id}/tasks/${task_id}/trigger`, { method: 'PATCH' })
+      .then(res => res.ok && res.status === 204
+        ? dispatch(toggleTask(task_id))
+        : null
+      )
+      .catch(err => console.error(TOGGLE_TASK, err));
+}
+
+export function toggleTask(task_id) {
+  return {
+    type: TOGGLE_TASK,
+    task_id
   }
 }
 

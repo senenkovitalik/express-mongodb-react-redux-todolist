@@ -264,12 +264,13 @@ export const periods = (function() {
     }
   }
 
+  // todo check how much times func calls
   function create(date) {
 
-    if (now !== null) {
-      console.log("Periods already created.");
-      return;
-    }
+    // if (now !== null) {
+    //   console.log("Periods already created.");
+    //   return;
+    // }
 
     now = date === undefined
       ? new Date()

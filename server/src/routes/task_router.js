@@ -3,6 +3,8 @@ const taskRouter = express.Router({ mergeParams: true });
 
 const { findUser, handleMongooseError } = require('../utils');
 
+// todo move findUser to one level up
+
 // get list of tasks
 taskRouter.get('/', findUser, (req, res) => {
   const { user } = req;
@@ -60,12 +62,12 @@ taskRouter.post('/', findUser, (req, res) => {
 
 // change task status
 taskRouter.patch('/:task_id/trigger', findUser, (req, res) => {
-  const { user, params: { listID, taskID } } = req;
+  const { user, params: { list_id, task_id } } = req;
 
-  const list = user.task_lists.id(listID);
+  const list = user.task_lists.id(list_id);
   if (list === null) return res.status(404).send();
 
-  const task = list.tasks.id(taskID);
+  const task = list.tasks.id(task_id);
   if (task === null) return res.status(404).send();
 
   task.completed = !task.completed;
