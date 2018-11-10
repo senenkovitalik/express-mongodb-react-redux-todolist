@@ -45,8 +45,11 @@ class ListTasks extends React.Component {
       default:
         start     = ps[period].start;
         end       = ps[period].end;
-        condition = (start, end, dueDate) =>
-          dueDate.getTime() >= start.getTime() && dueDate.getTime() <= end.getTime();
+        condition = (start, end, dueDate) => {
+          return start && end
+            ? dueDate.getTime() >= start.getTime() && dueDate.getTime() <= end.getTime()
+            : false;
+        }
     }
 
     return tasks.filter(t => {
@@ -128,9 +131,15 @@ class ListTasks extends React.Component {
     const tasks_to_show = Object.values(this.createTasksObject(current_tasks))
       .map((e, i) =>
         e.tasks.length > 0
+          // todo rewrite this as if-else
           ? <React.Fragment key={i}>
               <div key={i} className={`section-name ${e.name === 'Missed' ? 'text-danger' : 'text-primary'} font-weight-bold`}>{e.name}</div>
-              { e.tasks.map(task => <TaskItem key={task._id} task={task} missed={e.name === 'Missed'} />) }
+              { e.tasks.map(task =>
+                <TaskItem key={task._id}
+                          task={task}
+                          trigger={this.props.triggerTask}
+                          missed={e.name === 'Missed'}
+                />) }
             </React.Fragment>
           : null
     );
