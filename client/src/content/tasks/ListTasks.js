@@ -35,16 +35,16 @@ class ListTasks extends React.Component {
 
     switch (period) {
       case 'missed':
-        start     = ps.today.start;
+        start = ps.today.start;
         condition = (start, end, dueDate) => dueDate.getTime() < start.getTime();
         break;
       case 'later':
-        end       = ps.next_month.end;
+        end = ps.next_month.end;
         condition = (start, end, dueDate) => dueDate.getTime() > end.getTime();
         break;
       default:
-        start     = ps[period].start;
-        end       = ps[period].end;
+        start = ps[period].start;
+        end = ps[period].end;
         condition = (start, end, dueDate) => {
           return start && end
             ? dueDate.getTime() >= start.getTime() && dueDate.getTime() <= end.getTime()
@@ -129,20 +129,26 @@ class ListTasks extends React.Component {
       : [];
 
     const tasks_to_show = Object.values(this.createTasksObject(current_tasks))
-      .map((e, i) =>
-        e.tasks.length > 0
-          // todo rewrite this as if-else
-          ? <React.Fragment key={i}>
-              <div key={i} className={`section-name ${e.name === 'Missed' ? 'text-danger' : 'text-primary'} font-weight-bold`}>{e.name}</div>
-              { e.tasks.map(task =>
-                <TaskItem key={task._id}
-                          task={task}
-                          trigger={this.props.triggerTask}
-                          missed={e.name === 'Missed'}
-                />) }
+      .map((e, i) => {
+          if (e.tasks.length > 0) {
+
+            const missed = e.name === 'Missed' ? 'text-danger' : 'text-primary';
+            const className = `section-name ${missed} font-weight-bold`;
+
+            return <React.Fragment key={i}>
+              <div key={i} className={className}>{e.name}</div>
+              {
+                e.tasks.map(task => <TaskItem key={task._id}
+                                             task={task}
+                                             trigger={this.props.triggerTask}
+                                             missed={e.name === 'Missed'}/>)
+              }
             </React.Fragment>
-          : null
-    );
+          } else {
+            return null;
+          }
+        }
+      );
 
     return (
       <Row noGutters className="justify-content-center">
@@ -154,7 +160,7 @@ class ListTasks extends React.Component {
               setCurrentList={this.setCurrentList}
             />
             <Filter setFilter={this.props.updateVisibilityFilter}
-                    list={current_list} />
+                    list={current_list}/>
             <GroupActions/>
           </div>
 
@@ -163,11 +169,11 @@ class ListTasks extends React.Component {
           <div className="mb-3">
 
             // todo implement visibility filter
-            { tasks_to_show }
+            {tasks_to_show}
 
           </div>
 
-          <NewTaskButton list={this.state.currentList} />
+          <NewTaskButton list={this.state.currentList}/>
         </Col>
       </Row>
     );
