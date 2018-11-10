@@ -1,5 +1,4 @@
 import React from 'react';
-import { periods } from '../../libs/periods';
 import {
   Row,
   Col
@@ -10,7 +9,8 @@ import Filter from "../controls/Filter";
 import GroupActions from "../controls/GroupActions";
 import ListsDropdown from "../controls/ListsDropdown";
 import NewTaskButton from "../newTaskButton/NewTaskButton";
-import { filter_func } from '../../libs/helpers';
+import { createTasksObject } from '../../libs/helpers'
+import { apply_visibility_filter } from '../../libs/helpers';
 
 class ListTasks extends React.Component {
   constructor(props) {
@@ -21,8 +21,6 @@ class ListTasks extends React.Component {
     };
 
     this.setCurrentList = this.setCurrentList.bind(this);
-    this.filterByDate = this.filterByDate.bind(this);
-    this.createTasksObject = this.createTasksObject.bind(this);
   }
 
   setCurrentList(id) {
@@ -30,95 +28,7 @@ class ListTasks extends React.Component {
     this.setState({ currentList: id });
   }
 
-  filterByDate(ps, tasks, period) {
-
-    let start, end, condition;
-
-    switch (period) {
-      case 'missed':
-        start = ps.today.start;
-        condition = (start, end, dueDate) => dueDate.getTime() < start.getTime();
-        break;
-      case 'later':
-        end = ps.next_month.end;
-        condition = (start, end, dueDate) => dueDate.getTime() > end.getTime();
-        break;
-      default:
-        start = ps[period].start;
-        end = ps[period].end;
-        condition = (start, end, dueDate) => {
-          return start && end
-            ? dueDate.getTime() >= start.getTime() && dueDate.getTime() <= end.getTime()
-            : false;
-        }
-    }
-
-    return tasks.filter(t => {
-      const dueDate = new Date(t.dueDate);
-
-      return !isNaN(dueDate.getTime())
-        ? condition(start, end, dueDate)
-        : false;
-    });
-  }
-
-  // todo Bad name. Find better.
-  createTasksObject(tasks) {
-    periods.create(new Date());
-    const ps = periods.computePeriods();
-    const p = {
-      0: {
-        name: 'Missed',
-        tasks: []
-      },
-      1: {
-        name: 'Today',
-        tasks: []
-      },
-      2: {
-        name: 'Tomorrow',
-        tasks: []
-      },
-      3: {
-        name: 'End of Week',
-        tasks: []
-      },
-      4: {
-        name: 'Next Week',
-        tasks: []
-      },
-      5: {
-        name: 'End of Month',
-        tasks: []
-      },
-      6: {
-        name: 'Next Month',
-        tasks: []
-      },
-      7: {
-        name: 'Later',
-        tasks: []
-      },
-      8: {
-        name: 'Without date',
-        tasks: []
-      },
-    };
-
-    p['0'].tasks = this.filterByDate(ps, tasks, 'missed');
-    p["1"].tasks = this.filterByDate(ps, tasks, 'today');
-    p["2"].tasks = this.filterByDate(ps, tasks, 'tomorrow');
-    p["3"].tasks = this.filterByDate(ps, tasks, 'end_of_week');
-    p["4"].tasks = this.filterByDate(ps, tasks, 'next_week');
-    p["5"].tasks = this.filterByDate(ps, tasks, 'end_of_month');
-    p["6"].tasks = this.filterByDate(ps, tasks, 'next_week');
-    p["7"].tasks = this.filterByDate(ps, tasks, 'later');
-    // Maybe I'll fix this. In future. Maybe)
-    p["8"].tasks = tasks.filter(t => t.dueDate === "null");
-
-    return p;
-  }
-
+  // todo group actions
   render() {
 
     const current_list = this.props.lists[this.state.currentList]
@@ -133,14 +43,14 @@ class ListTasks extends React.Component {
       ? current_list.visibility_filter
       : null;
 
-    const tasks_to_show = Object.values(this.createTasksObject(current_tasks))
+    const tasks_to_show = Object.values(createTasksObject(current_tasks))
       .map((e, i) => {
           if (e.tasks.length > 0) {
 
             const missed = e.name === 'Missed' ? 'text-danger' : 'text-primary';
             const className = `section-name ${missed} font-weight-bold`;
 
-            const filtered = e.tasks.filter(filter_func(visibility_filter));
+            const filtered = apply_visibility_filter(e.tasks, visibility_filter);
 
             return filtered.length > 0
               ? <React.Fragment key={i}>
