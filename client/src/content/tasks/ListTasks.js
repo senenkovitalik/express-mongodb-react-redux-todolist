@@ -10,7 +10,7 @@ import Filter from "../controls/Filter";
 import GroupActions from "../controls/GroupActions";
 import ListsDropdown from "../controls/ListsDropdown";
 import NewTaskButton from "../newTaskButton/NewTaskButton";
-import { VisibilityFilter } from '../../redux/actions';
+import { filter_func } from '../../libs/helpers';
 
 class ListTasks extends React.Component {
   constructor(props) {
@@ -129,24 +129,9 @@ class ListTasks extends React.Component {
       ? Object.values(this.props.tasks).filter(task => current_list.tasks.includes(task._id))
       : [];
 
-    const filter_func = task => {
-      const visibility_filter = current_list.hasOwnProperty('visibility_filter')
-        ? current_list.visibility_filter
-        : null;
-
-      if (!visibility_filter) {
-        return false;
-      }
-
-      switch (visibility_filter) {
-        case VisibilityFilter.SHOW_ACTIVE:
-          return !task.completed;
-        case VisibilityFilter.SHOW_COMPLETED:
-          return task.completed;
-        default:
-          return true;
-      }
-    };
+    const visibility_filter = current_list.hasOwnProperty('visibility_filter')
+      ? current_list.visibility_filter
+      : null;
 
     const tasks_to_show = Object.values(this.createTasksObject(current_tasks))
       .map((e, i) => {
@@ -155,7 +140,7 @@ class ListTasks extends React.Component {
             const missed = e.name === 'Missed' ? 'text-danger' : 'text-primary';
             const className = `section-name ${missed} font-weight-bold`;
 
-            const filtered = e.tasks.filter(filter_func);
+            const filtered = e.tasks.filter(filter_func(visibility_filter));
 
             return filtered.length > 0
               ? <React.Fragment key={i}>
