@@ -6,7 +6,6 @@ import {
 import TaskItem from "./task-item/TaskItem";
 import './tasks.css';
 import Filter from "../controls/Filter";
-import GroupActions from "../controls/GroupActions";
 import ListsDropdown from "../controls/ListsDropdown";
 import NewTaskButton from "../newTaskButton/NewTaskButton";
 import { createTasksObject } from '../../libs/helpers'
@@ -28,7 +27,6 @@ class ListTasks extends React.Component {
     this.setState({ currentList: id });
   }
 
-  // todo group actions
   render() {
 
     const current_list = this.props.lists[this.state.currentList]
@@ -80,7 +78,6 @@ class ListTasks extends React.Component {
               setCurrentList={this.setCurrentList}/>
             <Filter setFilter={this.props.updateVisibilityFilter}
                     list={current_list}/>
-            <GroupActions/>
           </div>
 
           <hr/>
