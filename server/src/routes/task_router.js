@@ -1,12 +1,10 @@
 const express = require('express');
 const taskRouter = express.Router({ mergeParams: true });
 
-const { findUser, handleMongooseError } = require('../utils');
-
-// todo move findUser to one level up
+const { handleMongooseError } = require('../utils');
 
 // get list of tasks
-taskRouter.get('/', findUser, (req, res) => {
+taskRouter.get('/', (req, res) => {
   const { user } = req;
   const { listID } = req.params;
 
@@ -26,7 +24,7 @@ taskRouter.get('/', findUser, (req, res) => {
 });
 
 // get task by ID
-taskRouter.get('/:task_id', findUser, (req, res) => {
+taskRouter.get('/:task_id', (req, res) => {
   const { user } = req;
   const { list_id, task_id } = req.params;
 
@@ -40,7 +38,7 @@ taskRouter.get('/:task_id', findUser, (req, res) => {
 });
 
 // create task
-taskRouter.post('/', findUser, (req, res) => {
+taskRouter.post('/', (req, res) => {
   const { list_id } = req.params;
   const { title, completed, dueDate } = req.body;
   const { user } = req;
@@ -63,7 +61,7 @@ taskRouter.post('/', findUser, (req, res) => {
 // change task status
 
 // todo remove this -> one update method for all
-taskRouter.patch('/:task_id/trigger', findUser, (req, res) => {
+taskRouter.patch('/:task_id/trigger', (req, res) => {
   const { user, params: { list_id, task_id } } = req;
 
   const list = user.task_lists.id(list_id);
@@ -81,7 +79,7 @@ taskRouter.patch('/:task_id/trigger', findUser, (req, res) => {
 });
 
 // update task
-taskRouter.patch('/:task_id', findUser, (req, res) => {
+taskRouter.patch('/:task_id', (req, res) => {
   const {
     user,
     params: { list_id, task_id },
@@ -108,7 +106,7 @@ taskRouter.patch('/:task_id', findUser, (req, res) => {
 });
 
 // delete task
-taskRouter.delete('/:task_id', findUser, (req, res) => {
+taskRouter.delete('/:task_id', (req, res) => {
   const { user } = req;
   const { listID, taskID } = req.params;
 

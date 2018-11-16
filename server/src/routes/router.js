@@ -5,7 +5,7 @@ const taskRouter = require('./task_router');
 
 const User = require('../db/User');
 
-const { validatePasswords, checkAuth, handleMongooseError } = require('../utils');
+const { validatePasswords, checkAuth, findUser, handleMongooseError } = require('../utils');
 
 router.post('/signup', (req, res) => {
   const { username, email, password, conf_password } = req.body;
@@ -168,6 +168,6 @@ router.route('/users/self')
   });
 
 router.use('/lists', checkAuth, listRouter);
-router.use('/lists/:list_id/tasks', checkAuth, taskRouter);
+router.use('/lists/:list_id/tasks', checkAuth, findUser, taskRouter);
 
 module.exports = router;
