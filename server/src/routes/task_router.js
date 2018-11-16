@@ -3,64 +3,113 @@ const taskRouter = express.Router({ mergeParams: true });
 
 const { handleMongooseError } = require('../utils');
 
-// get list of tasks
-taskRouter.get('/', (req, res) => {
-  const { user } = req;
-  const { listID } = req.params;
+taskRouter.route('/')
+  .get((req, res) => {
+    // get list of tasks
+    const { user } = req;
+    const { listID } = req.params;
 
-  const task_list = user.task_lists.id(listID);
+    const task_list = user.task_lists.id(listID);
 
-  if (task_list !== null) {
-    const { tasks } = task_list;
+    if (task_list !== null) {
+      const { tasks } = task_list;
 
-    if (tasks) {
-      res.status(200).json(tasks);
+      if (tasks) {
+        res.status(200).json(tasks);
+      } else {
+        res.status(404).end();
+      }
     } else {
       res.status(404).end();
     }
-  } else {
-    res.status(404).end();
-  }
-});
+  })
+  .post((req, res) => {
+    // create task
+    const { list_id } = req.params;
+    const { title, completed, dueDate } = req.body;
+    const { user } = req;
 
-// get task by ID
-taskRouter.get('/:task_id', (req, res) => {
-  const { user } = req;
-  const { list_id, task_id } = req.params;
+    const list = user.task_lists.id(list_id);
+    const task = list.tasks.create({ title, completed, dueDate });
+    const task_id = task._id;
 
-  const task = user.task_lists.id(list_id).tasks.id(task_id);
+    list.tasks.push(task);
 
-  if (task) {
-    res.status(200).json(task);
-  } else {
-    res.status(404).end();
-  }
-});
+    user.save()
+      .then(() => {
+        res.location(`/api/lists/${list_id}/tasks/${task_id}`);
+        res.status(201);
+        res.json(Object.assign({}, task._doc, { list_id }));
+      })
+      .catch(err => handleMongooseError(err, res));
+  });
 
-// create task
-taskRouter.post('/', (req, res) => {
-  const { list_id } = req.params;
-  const { title, completed, dueDate } = req.body;
-  const { user } = req;
+taskRouter.route('/:task_id')
+  .get((req, res) => {
+    // get task by ID
+    const { user } = req;
+    const { list_id, task_id } = req.params;
 
-  const list = user.task_lists.id(list_id);
-  const task = list.tasks.create({ title, completed, dueDate });
-  const task_id = task._id;
+    const task = user.task_lists.id(list_id).tasks.id(task_id);
 
-  list.tasks.push(task);
+    if (task) {
+      res.status(200).json(task);
+    } else {
+      res.status(404).end();
+    }
+  })
+  .patch((req, res) => {
+    // update task
+    const {
+      user,
+      params: { list_id, task_id },
+      body: {
+        title, completed, dueDate
+      }
+    } = req;
 
-  user.save()
-    .then(() => {
-      res.location(`/api/lists/${list_id}/tasks/${task_id}`);
-      res.status(201);
-      res.json(Object.assign({}, task._doc, { list_id }));
-    })
-    .catch(err => handleMongooseError(err, res));
-});
+    const list = user.task_lists.id(list_id);
+    if (list === null) return res.status(404).end();
+
+    const task = list.tasks.id(task_id);
+    if (task === null) return res.status(404).end();
+
+    task.title = title;
+    task.completed = completed;
+    task.dueDate = dueDate;
+
+    user
+      .save()
+      .then(() => res.status(204).end())
+      .catch(err => handleMongooseError(err, res));
+  })
+  .delete((req, res) => {
+    // delete task
+    const { user } = req;
+    const { listID, taskID } = req.params;
+
+    const list = user.task_lists.id(listID);
+
+    if (list === null) {
+      res.status(404).end();
+    }
+
+    const task = list.tasks.id(taskID);
+
+    if (task) {
+      task.remove();
+      user.save()
+        .then(() => {
+          res.status(204).end();
+        })
+        .catch(err => handleMongooseError(err, res));
+    } else {
+      res.status(404).end();
+    }
+
+  });
 
 // change task status
-
-// todo remove this -> one update method for all
 taskRouter.patch('/:task_id/trigger', (req, res) => {
   const { user, params: { list_id, task_id } } = req;
 
@@ -76,59 +125,6 @@ taskRouter.patch('/:task_id/trigger', (req, res) => {
       res.status(204).end();
     })
     .catch(err => handleMongooseError(err, res));
-});
-
-// update task
-taskRouter.patch('/:task_id', (req, res) => {
-  const {
-    user,
-    params: { list_id, task_id },
-    body: {
-      title, completed, dueDate
-    }
-  } = req;
-
-
-  const list = user.task_lists.id(list_id);
-  if (list === null) return res.status(404).end();
-
-  const task = list.tasks.id(task_id);
-  if (task === null) return res.status(404).end();
-
-  task.title = title;
-  task.completed = completed;
-  task.dueDate = dueDate;
-
-  user
-    .save()
-    .then(() => res.status(204).end())
-    .catch(err => handleMongooseError(err, res));
-});
-
-// delete task
-taskRouter.delete('/:task_id', (req, res) => {
-  const { user } = req;
-  const { listID, taskID } = req.params;
-
-  const list = user.task_lists.id(listID);
-
-  if (list === null) {
-    res.status(404).end();
-  }
-
-  const task = list.tasks.id(taskID);
-
-  if (task) {
-    task.remove();
-    user.save()
-      .then(() => {
-        res.status(204).end();
-      })
-      .catch(err => handleMongooseError(err, res));
-  } else {
-    res.status(404).end();
-  }
-
 });
 
 module.exports = taskRouter;
