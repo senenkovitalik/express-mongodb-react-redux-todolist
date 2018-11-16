@@ -135,6 +135,9 @@ function tasks(state = {}, action) {
 
       return nextState;
     }
+    case UPDATE_TASK: {
+      return Object.assign({}, state, { [action.task._id]: action.task })
+    }
     default:
       return state;
   }

@@ -64,6 +64,30 @@ export function toggleTask(task_id) {
   }
 }
 
+// todo rewrite all functions like that
+export function updateTaskAsync(list_id, task) {
+  const reqProp = {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    },
+    body: createFormData(task)
+  };
+
+  // todo server should return updated task, cause right modified_at value must be set
+  return dispatch =>
+    fetch(`/api/lists/${list_id}/tasks/${task._id}`, reqProp)
+      .then(res => res.ok && res.status === 204 ? dispatch(updateTask(task)) : null)
+      .catch(err => console.error(`An error occurred`, err));
+}
+
+export function updateTask(task) {
+  return {
+    type: UPDATE_TASK,
+    task
+  }
+}
+
 //  List
 
 export function setCurrentList(id) {

@@ -3,9 +3,7 @@ import {
   Container,
   Row,
   Col,
-  Form,
   FormGroup,
-  Input,
   InputGroup,
   InputGroupText,
   Button
@@ -21,7 +19,6 @@ import {
   faCalendarAlt,
   faTimesCircle,
   faClock,
-  faPlusCircle
 } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
@@ -62,33 +59,31 @@ export default class Task extends Component {
   // todo Are task is done? -> trigger task status
   // todo change list
   handleValidSubmit() {
-    if (this.state.completed) {
-      /*
-      complete task
-      PATCH /api/lists/:listID/tasks/:taskID/trigger
-      */
-    } else {
-      // create new task
-      const dateString = this.state.date !== '' ? this.state.date : null;
-      const timeString = this.state.time !== '' ? this.state.time : null;
 
-      let dueDate = null;
+    const { task_id } = this.props.match.params;
+    const { title, completed } = this.state;
 
-      if (dateString && timeString) {
-        dueDate = new Date(`${dateString}T${timeString}:00`).toISOString();
-      } else if (dateString && !timeString) {
-        dueDate = new Date(`${dateString}T00:00:00`).toISOString();
-      }
+    const date_str = this.state.date !== '' ? this.state.date : null;
+    const time_str = this.state.time !== '' ? this.state.time : null;
+    let dueDate = null;
 
-      const { title, completed } = this.state;
-
-      this.props.createTask(this.props.match.params.id, {
-        title, completed, dueDate
-      });
-
-      // todo get dispatch callback AND THEN call line below
-      // this.props.history.push(`/lists/${this.props.match.params.id}`);
+    if (date_str && time_str) {
+      dueDate = new Date(`${date_str}T${time_str}:00`).toISOString();
+    } else if (date_str && !time_str) {
+      dueDate = new Date(`${date_str}T00:00:00`).toISOString();
     }
+
+    const old_task = this.props.tasks[task_id];
+    const new_task = { _id: task_id, title, completed, dueDate };
+
+    if (old_task) {
+      this.props.updateTask(this.props.match.params.list_id, new_task)
+    } else {
+      this.props.createTask(this.props.match.params.list_id, new_task);
+    }
+
+    // todo get dispatch callback AND THEN call line below
+    // this.props.history.push(`/lists/${this.props.match.params.id}`);
   }
 
   handleChange(e) {
@@ -98,7 +93,6 @@ export default class Task extends Component {
       case "title":
       case "date":
       case "time":
-        console.log(name, value);
         this.setState({ [name]: value });
         break;
       case "completed":
@@ -120,7 +114,7 @@ export default class Task extends Component {
           <AvForm onValidSubmit={this.handleValidSubmit}>
             {/*{<!-- Title -->}*/}
             <AvGroup className="mt-2 mb-0">
-              <label htmlFor="name"><strong>What need to done?</strong></label>
+              <label htmlFor="title"><strong>What need to done?</strong></label>
               <AvInput
                 required
                 validate={{ minLength: { value: 3 }, maxLength: { value: 25 }}}
@@ -206,29 +200,6 @@ export default class Task extends Component {
                     icon={faTimesCircle}
                     onClick={() => this.clearValue("time")}
                   />
-                </Button>
-              </div>
-            </FormGroup>
-
-            {/*{<!-- List manipulation -->}*/}
-            <FormGroup>
-              <label htmlFor="list"><strong>List</strong></label>
-              <div className="d-flex flex-nowrap">
-                <Input
-                  value={this.props.match.params.list_id}
-                  onChange={this.handleChange}
-                  name="list"
-                  type="select"
-                  id="list"
-                >
-                  {
-                    Object.values(this.props.lists).map(
-                      l => <option key={l._id} value={l._id}>{l.title}</option>
-                    )
-                  }
-                </Input>
-                <Button outline color="info">
-                  <FontAwesomeIcon icon={faPlusCircle} />
                 </Button>
               </div>
             </FormGroup>

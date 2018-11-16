@@ -61,6 +61,8 @@ taskRouter.post('/', findUser, (req, res) => {
 });
 
 // change task status
+
+// todo remove this -> one update method for all
 taskRouter.patch('/:task_id/trigger', findUser, (req, res) => {
   const { user, params: { list_id, task_id } } = req;
 
@@ -78,18 +80,30 @@ taskRouter.patch('/:task_id/trigger', findUser, (req, res) => {
     .catch(err => handleMongooseError(err, res));
 });
 
-taskRouter.patch('/:task_id/:title', findUser, (req, res) => {
-  const { user, params: { listID, taskID, title } } = req;
+// update task
+taskRouter.patch('/:task_id', findUser, (req, res) => {
+  const {
+    user,
+    params: { list_id, task_id },
+    body: {
+      title, completed, dueDate
+    }
+  } = req;
 
-  const list = user.task_lists.id(listID);
+
+  const list = user.task_lists.id(list_id);
   if (list === null) return res.status(404).end();
 
-  const task = list.tasks.id(taskID);
+  const task = list.tasks.id(task_id);
   if (task === null) return res.status(404).end();
 
   task.title = title;
-  user.save()
-    .then(() => { res.status(204).end(); })
+  task.completed = completed;
+  task.dueDate = dueDate;
+
+  user
+    .save()
+    .then(() => res.status(204).end())
     .catch(err => handleMongooseError(err, res));
 });
 
