@@ -58,7 +58,8 @@ class ListTasks extends React.Component {
                                                  task={task}
                                                  list_id={current_list._id}
                                                  trigger={this.props.triggerTask}
-                                                 missed={e.name === 'Missed'}/>)
+                                                 missed={e.name === 'Missed'}
+                                                 history={this.props.history}/>)
                 }
               </React.Fragment>
               : null;
@@ -68,6 +69,7 @@ class ListTasks extends React.Component {
         }
       );
 
+    // todo clicking on a task item open task page
     return (
       <Row noGutters className="justify-content-center">
         <Col xs="10">

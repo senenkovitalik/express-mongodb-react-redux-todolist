@@ -60,7 +60,7 @@ class App extends React.Component {
           />
           <Route
             exact
-            path="/lists/:id/tasks/:task_id"
+            path="/lists/:list_id/tasks/:task_id"
             render={props => <TaskContainer {...props} />}
           />
 

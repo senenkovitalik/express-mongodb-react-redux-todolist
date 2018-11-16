@@ -4,7 +4,8 @@ import {fetchLists, createTask} from "../../redux/actions";
 
 const mapStateToProps = state => {
   return {
-    lists: state.lists
+    lists: state.lists,
+    tasks: state.tasks
   }
 };
 

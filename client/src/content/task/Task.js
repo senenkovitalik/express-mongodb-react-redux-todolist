@@ -25,22 +25,42 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
+function getTaskStateObj(task) {
+  const obj = {
+    title: '',
+    completed: false,
+    date: '',
+    time: ''
+  };
+
+  if (task) {
+    const regexp = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}):00.000Z$/;
+    const match = regexp.exec(task.dueDate);
+
+    obj.title = task.title;
+    obj.completed = task.completed;
+    obj.date = match[1] || '';
+    obj.time = match[2] || '';
+  }
+
+  return obj;
+}
+
 export default class Task extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      title: '',
-      completed: false,
-      date: '',
-      time: ''
-    };
+    this.state = getTaskStateObj(
+      this.props.tasks[this.props.match.params.task_id] || null
+    );
 
     this.handleChange = this.handleChange.bind(this);
     this.clearValue = this.clearValue.bind(this);
     this.handleValidSubmit = this.handleValidSubmit.bind(this);
   }
 
+  // todo Are task is done? -> trigger task status
+  // todo change list
   handleValidSubmit() {
     if (this.state.completed) {
       /*
@@ -71,7 +91,6 @@ export default class Task extends Component {
     }
   }
 
-  // todo process all data by availity-reactstrap-validation
   handleChange(e) {
     const { name, value, checked } = e.target;
 
@@ -79,6 +98,7 @@ export default class Task extends Component {
       case "title":
       case "date":
       case "time":
+        console.log(name, value);
         this.setState({ [name]: value });
         break;
       case "completed":
@@ -91,6 +111,7 @@ export default class Task extends Component {
     this.setState({ [name]: '' });
   }
 
+  // todo hide time field if date not set
   render() {
     return (
       <Container>
@@ -107,7 +128,7 @@ export default class Task extends Component {
                 name="title"
                 placeholder="Task #1"
                 onChange={this.handleChange}
-                value={this.state.value}
+                value={this.state.title}
               />
               <AvFeedback>Please, fill  this field.</AvFeedback>
             </AvGroup>
@@ -119,7 +140,7 @@ export default class Task extends Component {
                   type="checkbox"
                   className="form-check-input"
                   name="completed"
-                  checked={this.state.done}
+                  checked={this.state.completed}
                   onChange={this.handleChange}
                   disabled={!this.props.match.params.task_id}
                 />
@@ -189,32 +210,12 @@ export default class Task extends Component {
               </div>
             </FormGroup>
 
-            {/*{<!-- Notification -->}*/}
-            {/*<FormGroup>
-              <strong>Notification</strong>
-              <Row>
-                <label htmlFor="reminder" className="col-4 col-md-3 col-form-label">Remind me</label>
-                <Col xs="8" md="9">
-                  <select className="form-control" id="reminder">
-                    <option>5 minutes</option>
-                    <option>10 minutes</option>
-                    <option>30 minutes</option>
-                    <option>1 hour</option>
-                    <option>2 hours</option>
-                    <option>6 hours</option>
-                    <option>12 hours</option>
-                    <option>1 day</option>
-                  </select>
-                </Col>
-              </Row>
-            </FormGroup>*/}
-
             {/*{<!-- List manipulation -->}*/}
             <FormGroup>
               <label htmlFor="list"><strong>List</strong></label>
               <div className="d-flex flex-nowrap">
                 <Input
-                  value={this.props.match.params.id}
+                  value={this.props.match.params.list_id}
                   onChange={this.handleChange}
                   name="list"
                   type="select"
@@ -251,13 +252,4 @@ export default class Task extends Component {
       </Container>
     );
   }
-
-  // componentDidMount() {
-  //   /*
-  //   If store doesn't contain lists, fetch them.
-  //    */
-  //   if (!Object.keys(this.props.lists).length) {
-  //     this.props.fetchLists();
-  //   }
-  // }
 }
