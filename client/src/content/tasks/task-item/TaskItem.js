@@ -6,10 +6,10 @@ import {
 } from 'reactstrap';
 import './task-item.css';
 
-// todo change task status
-const TaskItem = ({ task, trigger, list_id, missed }) => {
+const TaskItem = ({ task, trigger, list_id, missed, history }) => {
   return (
-    <Card className="task w-100">
+    <Card className="task w-100"
+          onClick={() => history.push(`/lists/${list_id}/tasks/${task._id}`)}>
       <CardBody>
         <div className="form-check">
           <Input className="form-check-input"
