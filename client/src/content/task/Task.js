@@ -175,33 +175,36 @@ export default class Task extends Component {
               </div>
 
               {/*{<!-- Time -->}*/}
-              <div className="d-flex flex-nowrap">
+              {
+                this.state.date &&
+                <div className="d-flex flex-nowrap">
 
-                {/*{<!-- Input -->}*/}
-                <InputGroup>
-                  <input
-                    type="time"
-                    name="time"
-                    className="form-control"
-                    value={this.state.time}
-                    onChange={this.handleChange}
-                    disabled={!this.state.date}
-                  />
-                  <div className="input-group-append">
-                    <InputGroupText>
-                      <FontAwesomeIcon icon={faClock} />
-                    </InputGroupText>
-                  </div>
-                </InputGroup>
+                  {/*{<!-- Input -->}*/}
+                  <InputGroup>
+                    <input
+                      type="time"
+                      name="time"
+                      className="form-control"
+                      value={this.state.time}
+                      onChange={this.handleChange}
+                      disabled={!this.state.date}
+                    />
+                    <div className="input-group-append">
+                      <InputGroupText>
+                        <FontAwesomeIcon icon={faClock} />
+                      </InputGroupText>
+                    </div>
+                  </InputGroup>
 
-                {/*{<!-- Remove button-->}*/}
-                <Button type="button" outline color="danger">
-                  <FontAwesomeIcon
-                    icon={faTimesCircle}
-                    onClick={() => this.clearValue("time")}
-                  />
-                </Button>
-              </div>
+                  {/*{<!-- Remove button-->}*/}
+                  <Button type="button" outline color="danger">
+                    <FontAwesomeIcon
+                      icon={faTimesCircle}
+                      onClick={() => this.clearValue("time")}
+                    />
+                  </Button>
+                </div>
+              }
             </FormGroup>
 
             {/*{<!-- Submit -->}*/}
