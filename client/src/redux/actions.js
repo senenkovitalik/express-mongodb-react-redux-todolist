@@ -2,7 +2,7 @@ import {createFormData} from "../utils";
 
 export const ADD_TASK = 'ADD_TASK';
 export const TOGGLE_TASK = 'TOGGLE_TASK';
-export const REMOVE_TASK = 'REMOVE_TASK';
+export const DELETE_TASK = 'DELETE_TASK';
 export const UPDATE_TASK = 'UPDATE_TASK';
 
 export const SET_CURRENT_LIST = 'SET_CURRENT_LIST';
@@ -78,7 +78,7 @@ export function updateTaskAsync(list_id, task) {
   return dispatch =>
     fetch(`/api/lists/${list_id}/tasks/${task._id}`, reqProp)
       .then(res => {
-        if (res => res.ok && res.status === 200) {
+        if (res.ok && res.status === 200) {
           return res.json()
         }
       })
@@ -90,6 +90,28 @@ export function updateTask(task) {
   return {
     type: UPDATE_TASK,
     task
+  }
+}
+
+export function deleteTaskAsync(list_id, task_id) {
+  const reqProp = {
+    method: 'DELETE'
+  };
+
+  return dispatch =>
+    fetch(`/api/lists/${list_id}/tasks/${task_id}`, reqProp)
+      .then(res => {
+        if (res.ok && res.status === 204) {
+          return dispatch(deleteTask(task_id))
+        }
+      })
+      .catch(err => console.error('An error occurred', err));
+}
+
+export function deleteTask(task_id) {
+  return {
+    type: DELETE_TASK,
+    task_id
   }
 }
 

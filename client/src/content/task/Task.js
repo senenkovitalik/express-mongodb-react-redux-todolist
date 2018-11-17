@@ -105,8 +105,8 @@ export default class Task extends Component {
     this.setState({ [name]: '' });
   }
 
-  // todo hide time field if date not set
   render() {
+    const { task_id, list_id } = this.props.match.params;
     return (
       <Container>
       <Row className="justify-content-center">
@@ -216,7 +216,11 @@ export default class Task extends Component {
                 className="mr-1"
               >Cancel</Button>
               {
-                this.props.match.params.task_id && <Button color="danger" className="mr-1">Remove</Button>
+                this.props.match.params.task_id
+                && <Button color="danger"
+                           className="mr-1"
+                           onClick={() => this.props.deleteTask(list_id, task_id)}
+                >Remove</Button>
               }
               <Button color="success">Save</Button>
             </div>

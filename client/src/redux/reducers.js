@@ -9,7 +9,7 @@ import {
   REMOVE_LIST,
   UPDATE_LIST,
   SET_VISIBILITY_FILTER,
-  VisibilityFilter, SET_CURRENT_LIST
+  VisibilityFilter, SET_CURRENT_LIST, DELETE_TASK
 } from './actions';
 
 const { SHOW_ALL } = VisibilityFilter;
@@ -138,6 +138,9 @@ function tasks(state = {}, action) {
     case UPDATE_TASK: {
       return Object.assign({}, state, { [action.task._id]: action.task })
     }
+    case DELETE_TASK:
+      const {[action.task_id]: dtask, ...rest} = state;
+      return Object.assign({}, rest);
     default:
       return state;
   }

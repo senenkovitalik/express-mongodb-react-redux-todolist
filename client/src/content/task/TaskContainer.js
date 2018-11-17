@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import Task from './Task';
-import { fetchLists, createTask, updateTaskAsync } from "../../redux/actions";
+import { fetchLists, createTask, updateTaskAsync, deleteTaskAsync } from "../../redux/actions";
 
 const mapStateToProps = state => {
   return {
@@ -13,7 +13,8 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchLists: () => dispatch(fetchLists()),
     createTask: (listID, title) => dispatch(createTask(listID, title)),
-    updateTask: (list_id, task) => dispatch(updateTaskAsync(list_id, task))
+    updateTask: (list_id, task) => dispatch(updateTaskAsync(list_id, task)),
+    deleteTask: (list_id, task_id) => dispatch(deleteTaskAsync(list_id, task_id))
   }
 };
 

@@ -87,20 +87,17 @@ taskRouter.route('/:task_id')
   })
   .delete((req, res) => {
     // delete task
-    const { user } = req;
-    const { listID, taskID } = req.params;
+    const { user, params: {list_id, task_id} } = req;
+    const list = user.task_lists.id(list_id);
 
-    const list = user.task_lists.id(listID);
+    if (list === null) { res.status(404).end(); }
 
-    if (list === null) {
-      res.status(404).end();
-    }
-
-    const task = list.tasks.id(taskID);
+    const task = list.tasks.id(task_id);
 
     if (task) {
       task.remove();
-      user.save()
+      user
+        .save()
         .then(() => {
           res.status(204).end();
         })
