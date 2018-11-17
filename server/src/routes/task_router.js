@@ -77,10 +77,12 @@ taskRouter.route('/:task_id')
     task.title = title;
     task.completed = completed;
     task.dueDate = dueDate;
+    task.modified_at = new Date();
+    task.markModified('modified_at');
 
     user
       .save()
-      .then(() => res.status(204).end())
+      .then(() => res.status(200).json(task))
       .catch(err => handleMongooseError(err, res));
   })
   .delete((req, res) => {

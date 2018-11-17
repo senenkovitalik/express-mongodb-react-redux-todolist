@@ -77,7 +77,12 @@ export function updateTaskAsync(list_id, task) {
   // todo server should return updated task, cause right modified_at value must be set
   return dispatch =>
     fetch(`/api/lists/${list_id}/tasks/${task._id}`, reqProp)
-      .then(res => res.ok && res.status === 204 ? dispatch(updateTask(task)) : null)
+      .then(res => {
+        if (res => res.ok && res.status === 200) {
+          return res.json()
+        }
+      })
+      .then(json => dispatch(updateTask(json)))
       .catch(err => console.error(`An error occurred`, err));
 }
 

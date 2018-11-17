@@ -167,7 +167,7 @@ router.route('/users/self')
       .catch(err => handleMongooseError(err, res));
   });
 
-router.use('/lists', checkAuth, listRouter);
+router.use('/lists', checkAuth, findUser, listRouter);
 router.use('/lists/:list_id/tasks', checkAuth, findUser, taskRouter);
 
 module.exports = router;
